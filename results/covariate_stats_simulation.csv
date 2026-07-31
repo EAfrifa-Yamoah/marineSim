@@ -1,0 +1,5 @@
+Covariate,Range_km,Type,n,mean,sd,min,Q1,median,Q3,max
+Depth,45,static,15000,0.0,1.0,-3.3552,-0.6584,0.0055,0.6766,3.4171
+Substrate complexity,35,static,15000,-0.0,1.0,-3.5658,-0.6864,-0.018,0.6981,4.0421
+Wave exposure,60,static,15000,-0.0,1.0,-3.222,-0.7112,-0.013,0.7185,3.9757
+Sea surface temperature,45,"dynamic, AR(1) rho=0.6",75000,0.0,1.0058,-3.9813,-0.682,-0.0109,0.6843,3.7788

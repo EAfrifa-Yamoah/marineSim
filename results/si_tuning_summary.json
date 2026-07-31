@@ -1,0 +1,22 @@
+{
+  "RF": {
+    "default": 0.6768,
+    "best": 0.6768,
+    "worst": 0.6717,
+    "spread": 0.0052
+  },
+  "SpatialRF": {
+    "default": 0.7971,
+    "best": 0.7971,
+    "worst": 0.7832,
+    "spread": 0.0139
+  },
+  "stRF": {
+    "default": 0.8443,
+    "best": 0.8464,
+    "worst": 0.8317,
+    "spread": 0.0146
+  },
+  "ranking_preserved_all_configs": true,
+  "n_configs": 9
+}

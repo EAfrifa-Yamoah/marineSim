@@ -1,0 +1,48 @@
+{
+  "title": "marineSim: spatio-temporal random forests for marine species distribution modelling under data limitation",
+  "description": "<p>Simulation benchmark, R package (marineSim) and applied analysis code for the spatio-temporal random forest (stRF) method. stRF augments an ordinary random forest with multi scale spatial lags, temporal features and Euclidean distance fields.</p><p>The repository contains: the factorial simulation engine and benchmark (six ground-truth worlds &times; five sample sizes &times; three sampling designs &times; three timestep counts, six replicates); the Posidonia sinuosa seagrass case study for five Western Australian marine parks; the marineSim R package; and all code to regenerate every figure, table and number reported in the associated article.</p><p>This release accompanies the article submitted to Methods in Ecology and Evolution.</p>",
+  "upload_type": "software",
+  "license": "MIT",
+  "access_right": "open",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "Afrifa-Yamoah, Ebenezer",
+      "affiliation": "School of Science, Edith Cowan University, Perth, Western Australia",
+      "orcid": "0000-0003-1741-9249"
+    },
+    {
+      "name": "Fouedjio, Francky",
+      "affiliation": "Edith Cowan University"
+    },
+    {
+      "name": "Mueller, Ute",
+      "affiliation": "Edith Cowan University"
+    },
+    {
+      "name": "McMahon, Kathryn",
+      "affiliation": "Edith Cowan University"
+    },
+    {
+      "name": "Hyndes, Glenn A.",
+      "affiliation": "Edith Cowan University"
+    }
+  ],
+  "keywords": [
+    "species distribution model",
+    "random forest",
+    "spatio-temporal modelling",
+    "marine ecology",
+    "seagrass",
+    "data limitation",
+    "area of applicability"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "scheme": "url",
+      "identifier": "https://github.com/GITHUB-USER/marineSim"
+    }
+  ],
+  "notes": "TODO before release: replace GITHUB-USER above with your GitHub account name. On acceptance, add the article DOI as a related identifier with relation 'isSupplementTo' and scheme 'doi'."
+}

@@ -1,0 +1,7 @@
+,depth,kd490,htyperank,meansummermIST,maxsummermIST,CVsummermIST
+depth,1.0,-0.212,-0.194,-0.007,-0.066,-0.028
+kd490,-0.212,1.0,-0.055,-0.007,-0.049,-0.135
+htyperank,-0.194,-0.055,1.0,0.32,0.151,-0.28
+meansummermIST,-0.007,-0.007,0.32,1.0,0.852,0.264
+maxsummermIST,-0.066,-0.049,0.151,0.852,1.0,0.589
+CVsummermIST,-0.028,-0.135,-0.28,0.264,0.589,1.0

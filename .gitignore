@@ -1,0 +1,26 @@
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+# targets
+_targets/
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+# os
+.DS_Store
+
+# NOTE ON OUTPUTS
+# figures/*.png and results/*.{csv,json} are deliberately NOT ignored. They are the
+# artefacts the manuscript reports, so the archived release must contain them: a reader
+# should be able to verify every figure and number without re-running a simulation that
+# takes hours. Regenerating them is still a one-command operation (see README).
+#
+# Raw case-study data is excluded: it is third-party monitoring data and is not ours to
+# redistribute. See RELEASE.md, step 0.
+data/raw/
+*Bayesiandataset*

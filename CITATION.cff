@@ -1,0 +1,68 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the article and the archived software release."
+title: "marineSim: spatio-temporal random forests for marine species distribution modelling under data limitation"
+abstract: >-
+  Simulation benchmark, R package and applied analysis for the spatio-temporal random
+  forest (stRF) method. stRF augments an ordinary random forest with multi scale spatial
+  lags, temporal features and Euclidean distance fields, and is evaluated against a
+  generalised linear model, a generalised additive model, a standard random forest, a
+  spatial random forest and a Gaussian process comparator across a factorial simulation
+  and a Posidonia sinuosa seagrass case study in Western Australia.
+type: software
+version: 0.3.0
+# TODO release day: set to the date you cut the GitHub release (YYYY-MM-DD)
+date-released: 2026-07-13
+license: MIT
+# TODO release day: replace <GITHUB-USER> with your GitHub account name
+repository-code: "https://github.com/<GITHUB-USER>/marineSim"
+
+authors:
+  - family-names: Afrifa-Yamoah
+    given-names: Ebenezer
+    email: e.afrifayamoah@ecu.edu.au
+    affiliation: "School of Science, Edith Cowan University, Perth, Western Australia"
+    orcid: "https://orcid.org/0000-0003-1741-9249"
+  - family-names: Fouedjio
+    given-names: Francky
+    affiliation: "Edith Cowan University"
+    # TODO: add ORCID if available
+  - family-names: Mueller
+    given-names: Ute
+    affiliation: "Edith Cowan University"
+    # TODO: add ORCID if available
+  - family-names: McMahon
+    given-names: Kathryn
+    affiliation: "Edith Cowan University"
+    # TODO: add ORCID if available
+  - family-names: Hyndes
+    given-names: Glenn A.
+    affiliation: "Edith Cowan University"
+    # TODO: add ORCID if available
+
+keywords:
+  - species distribution model
+  - random forest
+  - spatio-temporal modelling
+  - marine ecology
+  - seagrass
+  - data limitation
+  - area of applicability
+
+preferred-citation:
+  type: article
+  title: "Spatio-temporal random forests with adaptive local features for marine species distribution modelling under data limitation"
+  authors:
+    - family-names: Afrifa-Yamoah
+      given-names: Ebenezer
+      orcid: "https://orcid.org/0000-0003-1741-9249"
+    - family-names: Fouedjio
+      given-names: Francky
+    - family-names: Mueller
+      given-names: Ute
+    - family-names: McMahon
+      given-names: Kathryn
+    - family-names: Hyndes
+      given-names: Glenn A.
+  journal: "Methods in Ecology and Evolution"
+  year: 2026
+  # TODO on acceptance: add volume, issue, pages and the article DOI

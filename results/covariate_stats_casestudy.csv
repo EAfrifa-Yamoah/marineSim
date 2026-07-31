@@ -1,0 +1,7 @@
+Covariate,Units,Type,n,mean,sd,min,Q1,median,Q3,max
+depth,m (below surface),static/site,748,-4.8595,3.3922,-18.0,-5.4,-3.9,-2.9,-1.2
+kd490,m^-1 (light attenuation),time-varying,748,0.1529,0.0844,0.0706,0.1054,0.1195,0.1663,0.654
+htyperank,ordinal rank,static/site,748,2.0107,1.1562,1.0,1.0,2.0,2.0,4.0
+meansummermIST,deg C (mean summer MHW intensity),time-varying,748,23.0584,0.586,21.22,22.72,22.97,23.41,25.47
+maxsummermIST,deg C (max summer MHW intensity),time-varying,748,24.8045,0.8847,22.72,24.18,24.7,25.215,28.77
+CVsummermIST,-- (CV of summer MHW intensity),time-varying,748,3.7621,0.6641,2.24,3.35,3.78,4.09,5.96

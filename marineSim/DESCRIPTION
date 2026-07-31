@@ -1,0 +1,36 @@
+Package: marineSim
+Title: Spatiotemporal Random Forests for Marine Species Distribution Modelling Under Data Limitation
+Version: 0.3.0
+Authors@R: c(
+    person("Ebenezer", "Afrifa-Yamoah", email = "e.afrifayamoah@ecu.edu.au",
+           role = c("aut", "cre")),
+    person("Francky", "Fouedjio", role = "aut"),
+    person("Ute", "Mueller", role = "aut"),
+    person("Kathryn", "McMahon", role = "aut"),
+    person("Glenn A.", "Hyndes", role = "aut"))
+Description: Tools for the simulation benchmark and applied analysis behind the
+    spatiotemporal random forest (stRF) method for marine species distribution
+    modelling. The package provides a Matern Gaussian random field generator, a
+    configurable ground truth world simulator with spatial and temporal structure,
+    the stRF feature engineering layer (multi scale spatial lags, temporal lags and
+    Euclidean distance fields), thin wrappers around competing models (GLM, GAM,
+    spatial random forest and a geostatistical comparator), a predictive gain
+    decomposition, and an area of applicability routine for honest extrapolation
+    assessment. The design is built for the data limited regime of tens of survey
+    sites observed over a handful of time points.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 4.1.0)
+Imports:
+    ranger,
+    mgcv,
+    stats,
+    FNN
+Suggests:
+    testthat (>= 3.0.0),
+    targets,
+    pROC,
+    ggplot2
+RoxygenNote: 7.3.1
+Config/testthat/edition: 3
