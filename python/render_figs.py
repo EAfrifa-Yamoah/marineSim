@@ -24,8 +24,8 @@ def figure2():
     df = pd.read_csv(f"{R}/ablation_decomposed.csv")
     fig, ax = plt.subplots(1, 2, figsize=(6.5, 3.55))
 
-    labels = ["Algorithmic\nflexibility", "Coordinates", "Distance\nfields",
-              "Spatial\nlags", "Temporal\nfeatures"]
+    labels = ["Algorithmic flexibility", "Coordinates", "Distance fields",
+              "Spatial lags", "Temporal features"]
     keys = ["ML", "COORD", "EDF", "LAG", "TEMP"]
     cols = [OK["grey"], OK["blue"], OK["blue"], OK["blue"], OK["orange"]]
     est = [d["shapley"][k][0] for k in keys]
@@ -39,7 +39,8 @@ def figure2():
         ax[0].text(i, v + hi[i] + 0.003, f"{100*v/total:.0f}%",
                    ha="center", va="bottom", fontsize=7.5)
     ax[0].set_xticks(range(5))
-    ax[0].set_xticklabels(labels, fontsize=6.8)
+    ax[0].set_xticklabels(labels, fontsize=7.2, rotation=45, ha="right",
+                          rotation_mode="anchor")
     ax[0].set_ylabel("Shapley contribution to test AUC", fontsize=8)
     ax[0].set_ylim(0, max(est) + 0.020)
     ax[0].tick_params(labelsize=7.5)
@@ -74,7 +75,7 @@ def figure2():
     h, l = ax[1].get_legend_handles_labels()
     fig.legend(h, l, loc="lower center", ncol=2, frameon=False, fontsize=7.5,
                bbox_to_anchor=(0.5, -0.015))
-    fig.tight_layout(rect=[0, 0.075, 1, 1])
+    fig.tight_layout(rect=[0, 0.085, 1, 1])
     fig.savefig(f"{R}/FIG_decomposition.png", dpi=400, bbox_inches="tight")
     plt.close(fig)
     print("  FIG_decomposition.png")
