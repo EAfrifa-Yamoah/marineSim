@@ -1,7 +1,6 @@
 # marineSim — reproduce the article from the repository root.
 # The ablation grid takes hours; everything else runs in minutes to an hour.
 RS   := Rscript
-PY   := python3
 A    := analysis
 F    := figures/scripts
 DATA ?= data/raw/Bayesiandataset_2025_final.csv
@@ -41,8 +40,8 @@ case: $(DATA)  ## case study (needs the monitoring data)
 $(DATA):
 	@echo "Missing $(DATA). Case study data are not redistributed; see README, Data availability."; exit 1
 
-figures:  ## draw all figures from results/
-	cd $(F) && $(PY) make_figures_2_4_5.py && $(PY) make_figure_3.py && $(PY) make_figures_S2_S3_S4.py \
-	  && $(PY) make_figure_S8.py && $(PY) make_figure_S1.py && $(PY) make_figures_case.py
+figures:  ## draw all figures from results/ (ggplot2)
+	cd $(F) && $(RS) make_figures_2_4_5.R && $(RS) make_figure_3.R && $(RS) make_figures_S2_S3_S4.R \
+	  && $(RS) make_figure_S8.R && $(RS) make_figure_S1.R && $(RS) make_figures_case.R
 
 all: verify benchmark decompose gam core si figures  ## everything except sdmTMB and the case study

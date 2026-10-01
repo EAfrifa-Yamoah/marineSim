@@ -7,10 +7,9 @@ Code, results and figures behind the article
 > distribution modelling under data limitation.* Methods in Ecology and Evolution
 > (submitted).
 
-Everything reported in the article and its Supplement is produced in **R** by the
-`marineSim` package and the scripts in `analysis/`. The figure files are rendered
-from the stored CSV results by short Python (matplotlib) scripts in
-`figures/scripts/`; no number is computed in Python.
+Everything reported in the article and its Supplement, numbers and figures alike,
+is produced in **R** by the `marineSim` package, the scripts in `analysis/` and the
+ggplot2 scripts in `figures/scripts/`.
 
 ## What the method does
 
@@ -56,7 +55,7 @@ results/                outputs of the scripts above, as reported
 figures/
   main/Figure2..8.png   article figures (Figure 1 is a schematic drawn outside R)
   si/FigureS1..S8.png   Supplement figures
-  scripts/              matplotlib scripts that draw the figures from results/
+  scripts/              ggplot2 scripts that draw the figures from results/ (figstyle.R holds the palette)
 data/
   coast_wa.json         simplified Western Australian coastline used for the corridor maps
   raw/                  (not distributed) case study data, see Data availability
@@ -67,10 +66,11 @@ data/
 ### 1. Install
 
 R >= 4.1 with `ranger` (the only hard dependency of the package). The auxiliary
-scripts also use `mgcv`, `jsonlite`, `sp` and, for Supplement S6, `sdmTMB`.
+scripts also use `mgcv`, `jsonlite`, `sp` and, for Supplement S6, `sdmTMB`; the
+figure scripts use `ggplot2`, `patchwork`, `scales` and (optionally) `ragg`.
 
 ```r
-install.packages(c("ranger", "mgcv", "jsonlite", "sp", "testthat"))
+install.packages(c("ranger", "mgcv", "jsonlite", "sp", "testthat", "ggplot2", "patchwork", "scales", "ragg"))
 install.packages("marineSim", repos = NULL, type = "source")   # from the repository root
 # or: remotes::install_github("GITHUB-USER/marineSim", subdir = "marineSim")
 ```
@@ -138,13 +138,15 @@ Rscript 08_case_study.R           # ~5 min on one core
 
 ```bash
 cd ../figures/scripts
-python3 make_figures_2_4_5.py; python3 make_figure_3.py
-python3 make_figures_S2_S3_S4.py; python3 make_figure_S8.py; python3 make_figure_S1.py
-python3 make_figures_case.py      # Figures 6 to 8 and S5 to S7
+Rscript make_figures_2_4_5.R; Rscript make_figure_3.R
+Rscript make_figures_S2_S3_S4.R; Rscript make_figure_S8.R; Rscript make_figure_S1.R
+Rscript make_figures_case.R       # Figures 6 to 8 and S5 to S7
 ```
 
-Requires `matplotlib`, `pandas` and `numpy`. Running these on the stored results
-regenerates the committed PNG files pixel for pixel.
+Each script reads only `results/` (and `data/coast_wa.json` for the maps) and
+writes 300 dpi PNG files to `figures/main/` and `figures/si/`. The committed PNG
+files were produced by these scripts with ggplot2 3.4.4, patchwork 1.2.0 and ragg
+1.2.7; another ggplot2 version may differ in minor layout details.
 
 ## Verification performed before release
 
@@ -156,7 +158,8 @@ regenerates the committed PNG files pixel for pixel.
   exactly from `ablation_expanded.csv`.
 * The case study rerun from `08_case_study.R` reproduces every archived CSV in `results/case_study/` exactly.
 * Twelve GAM fits rerun through `03_gam_core.R` match `si/gam_core.csv` to 1e-9.
-* All fifteen figure files regenerate pixel identical from `results/`.
+* All fifteen figure files were regenerated from `results/` by the R scripts and
+  checked visually against the previous matplotlib renderings.
 
 ## Data availability
 

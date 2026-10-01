@@ -53,7 +53,7 @@ cd analysis && Rscript 00_verify_engine.R      # every line PASS
 commit:
 
 ```bash
-git ls-files figures/ | wc -l     # expect 22 (15 png + 6 scripts + figstyle)
+git ls-files figures/ | wc -l     # expect 22 (15 png + 6 R scripts + figstyle.R)
 git ls-files results/ | wc -l     # expect 30
 git ls-files data/                # expect data/coast_wa.json only
 ```

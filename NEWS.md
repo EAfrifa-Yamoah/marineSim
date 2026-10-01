@@ -15,7 +15,7 @@ DESCRIPTION still read 0.3.0); the major bump marks the replacement of the engin
   realisations, T = 10, detection 0.7, Poisson abundance), the GAM and sdmTMB
   comparators, and the R implementation of the seagrass case study.
 * `results/` and `figures/` hold the reported outputs; `figures/scripts/` draws
-  the figures from `results/` with matplotlib.
+  the figures from `results/` with ggplot2, so the whole repository is R.
 * Removed: the earlier Python pipeline (`python/`), the `{targets}` pipeline and
   the previous `R/` sources, all of which implemented an earlier generator and
   are superseded. They remain in the git history before this release.
