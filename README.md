@@ -72,7 +72,7 @@ figure scripts use `ggplot2`, `patchwork`, `scales` and (optionally) `ragg`.
 ```r
 install.packages(c("ranger", "mgcv", "jsonlite", "sp", "testthat", "ggplot2", "patchwork", "scales", "ragg"))
 install.packages("marineSim", repos = NULL, type = "source")   # from the repository root
-# or: remotes::install_github("GITHUB-USER/marineSim", subdir = "marineSim")
+# or: remotes::install_github("EAfrifa-Yamoah/marineSim", subdir = "marineSim")
 ```
 
 The reported results were produced with R 4.3.3, ranger 0.16.0 and mgcv 1.9-1 on

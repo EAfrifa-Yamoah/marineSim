@@ -21,8 +21,8 @@ Description: The simulation engine behind the article "Spatio-temporal random
     the repository's analysis/ directory calling these functions.
 License: MIT + file LICENSE
 Encoding: UTF-8
-URL: https://github.com/GITHUB-USER/marineSim
-BugReports: https://github.com/GITHUB-USER/marineSim/issues
+URL: https://github.com/EAfrifa-Yamoah/marineSim
+BugReports: https://github.com/EAfrifa-Yamoah/marineSim/issues
 Depends: R (>= 4.1.0)
 Imports:
     ranger (>= 0.14.0),

@@ -41,9 +41,9 @@
     {
       "relation": "isSupplementTo",
       "scheme": "url",
-      "identifier": "https://github.com/GITHUB-USER/marineSim"
+      "identifier": "https://github.com/EAfrifa-Yamoah/marineSim"
     }
   ],
-  "notes": "TODO before release: replace GITHUB-USER above with your GitHub account name. On acceptance, add the article DOI as a related identifier with relation 'isSupplementTo' and scheme 'doi'.",
+  "notes": "On acceptance, add the article DOI as a related identifier with relation 'isSupplementTo' and scheme 'doi'.",
   "version": "3.0.0"
 }

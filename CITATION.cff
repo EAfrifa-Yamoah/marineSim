@@ -13,8 +13,7 @@ version: 3.0.0
 # TODO release day: set to the date you cut the GitHub release (YYYY-MM-DD)
 date-released: 2026-10-01
 license: MIT
-# TODO release day: replace <GITHUB-USER> with your GitHub account name
-repository-code: "https://github.com/<GITHUB-USER>/marineSim"
+repository-code: "https://github.com/EAfrifa-Yamoah/marineSim"
 
 authors:
   - family-names: Afrifa-Yamoah
