@@ -42,8 +42,8 @@ Repeat it on your own machine before pushing, because a reviewer will run it:
 
 ```bash
 R CMD build marineSim
-_R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-manual marineSim_1.0.0.tar.gz
-R CMD INSTALL marineSim_1.0.0.tar.gz
+_R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-manual marineSim_3.0.0.tar.gz
+R CMD INSTALL marineSim_3.0.0.tar.gz
 cd analysis && Rscript 00_verify_engine.R      # every line PASS
 ```
 
@@ -84,13 +84,13 @@ this repository already has them.
 
 ### 1.2 Push
 
-The repository already carries its git history (the earlier Python based versions
-are in it, before the v1.0.0 commit). From the repository root:
+The repository already carries its git history and the earlier tags v2.0.0 and
+v2.0.1 (the July revision); the new release is v3.0.0 so that versions stay in order. From the repository root:
 
 ```bash
 git remote add origin https://github.com/<GITHUB-USER>/marineSim.git
 git push -u origin main
-git push origin v1.0.0
+git push origin --tags
 ```
 
 ### 1.3 Check the result in a browser
@@ -129,8 +129,8 @@ repositories.
 
 Back on GitHub: **Releases** → **Create a new release**.
 
-- **Tag**: `v1.0.0` (already created locally and pushed in 1.2; it matches `Version:` in `marineSim/DESCRIPTION`)
-- **Title**: `marineSim v1.0.0 — stRF for marine SDM under data limitation`
+- **Tag**: `v3.0.0` (already created locally and pushed in 1.2; it matches `Version:` in `marineSim/DESCRIPTION`)
+- **Title**: `marineSim v3.0.0 — stRF for marine SDM under data limitation`
 - **Description**: one paragraph on what the release contains, and note that it
   accompanies the MEE submission.
 - **Publish release.**
@@ -198,9 +198,9 @@ Add the badge to the top of `README.md` (concept DOI, so it tracks the latest ve
 Reviewers will ask for changes, and the code will change with them.
 
 1. Commit and push to `main` as usual.
-2. Bump `Version:` in `marineSim/DESCRIPTION` (e.g. `1.0.1`), `version:` in
+2. Bump `Version:` in `marineSim/DESCRIPTION` (e.g. `3.0.1`), `version:` in
    `CITATION.cff` and `.zenodo.json`, and add an entry to `NEWS.md`.
-3. Cut a new GitHub release (`v1.0.1`).
+3. Cut a new GitHub release (`v3.0.1`).
 4. Zenodo automatically archives it as a **new version** of the same record.
 
 The concept DOI is unchanged. A **new version DOI** is minted, and that is the one the

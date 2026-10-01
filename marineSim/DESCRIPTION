@@ -1,6 +1,6 @@
 Package: marineSim
 Title: Spatio-Temporal Random Forests for Marine Species Distribution Modelling Under Data Limitation
-Version: 1.0.0
+Version: 3.0.0
 Authors@R: c(
     person("Ebenezer", "Afrifa-Yamoah", email = "e.afrifayamoah@ecu.edu.au",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1741-9249")),
