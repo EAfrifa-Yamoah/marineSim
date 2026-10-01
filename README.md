@@ -2,7 +2,7 @@
 
 Code, results and figures behind the article
 
-> Afrifa-Yamoah, E., Fouedjio, F., Mueller, U., McMahon, K. and Hyndes, G. A.
+> Afrifa-Yamoah, E.,  Fouedjio, F., Emet, A., Awuah-Mensah, Y. K., Siqueira, A. C., Mueller, U., 
 > *Spatio-temporal random forests with adaptive local features for marine species
 > distribution modelling under data limitation.* Methods in Ecology and Evolution
 > (submitted).
