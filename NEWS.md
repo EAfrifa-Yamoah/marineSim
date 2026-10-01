@@ -1,8 +1,8 @@
-# marineSim 3.0.0 (2026-10-01)
+# marineSim 1.0.0 (2026-10-01)
 
 Release accompanying the submitted article. R is the sole computational engine.
-The version follows the existing tags v2.0.0 and v2.0.1 of the July revision (whose
-DESCRIPTION still read 0.3.0); the major bump marks the replacement of the engine.
+The earlier tags v2.0.0 and v2.0.1 belong to the July revision (whose DESCRIPTION
+still read 0.3.0); this release of the replaced engine is numbered 1.0.0.
 
 * The package now contains the harmonised simulation engine of Section 3.1 to 3.4
   (ground truth generator with occurrence and Poisson abundance, three sampling

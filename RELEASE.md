@@ -42,8 +42,8 @@ Repeat it on your own machine before pushing, because a reviewer will run it:
 
 ```bash
 R CMD build marineSim
-_R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-manual marineSim_3.0.0.tar.gz
-R CMD INSTALL marineSim_3.0.0.tar.gz
+_R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-manual marineSim_1.0.0.tar.gz
+R CMD INSTALL marineSim_1.0.0.tar.gz
 cd analysis && Rscript 00_verify_engine.R      # every line PASS
 ```
 
@@ -62,11 +62,11 @@ git ls-files data/                # expect data/coast_wa.json only
 
 | File | Placeholder | Replace with |
 |---|---|---|
-| `CITATION.cff` | `<GITHUB-USER>` | your GitHub account name |
+| `CITATION.cff` | `EAfrifa-Yamoah` | your GitHub account name |
 | `CITATION.cff` | `date-released` | the date you cut the release |
-| `.zenodo.json` | `GITHUB-USER` | your GitHub account name |
-| `README.md` | Citation section and `GITHUB-USER` | the Zenodo DOI (step 2.4) and your account name |
-| `marineSim/DESCRIPTION` | `GITHUB-USER` in URL and BugReports | your GitHub account name |
+| `.zenodo.json` | `EAfrifa-Yamoah` | your GitHub account name |
+| `README.md` | Citation section and `EAfrifa-Yamoah` | the Zenodo DOI (step 2.4) and your account name |
+| `marineSim/DESCRIPTION` | `EAfrifa-Yamoah` in URL and BugReports | your GitHub account name |
 | Manuscript | (no Data Availability Statement yet) | add one with the Zenodo DOI and repository URL (step 3) |
 
 Co-author ORCIDs are marked `TODO` in `CITATION.cff`. Adding them means Zenodo credits
@@ -85,10 +85,10 @@ this repository already has them.
 ### 1.2 Push
 
 The repository already carries its git history and the earlier tags v2.0.0 and
-v2.0.1 (the July revision); the new release is v3.0.0 so that versions stay in order. From the repository root:
+v2.0.1 (the July revision); the new release is v1.0.0. From the repository root:
 
 ```bash
-git remote add origin https://github.com/<GITHUB-USER>/marineSim.git
+git remote add origin https://github.com/EAfrifa-Yamoah/marineSim.git
 git push -u origin main
 git push origin --tags
 ```
@@ -129,8 +129,8 @@ repositories.
 
 Back on GitHub: **Releases** → **Create a new release**.
 
-- **Tag**: `v3.0.0` (already created locally and pushed in 1.2; it matches `Version:` in `marineSim/DESCRIPTION`)
-- **Title**: `marineSim v3.0.0 — stRF for marine SDM under data limitation`
+- **Tag**: `v1.0.0` (already created locally and pushed in 1.2; it matches `Version:` in `marineSim/DESCRIPTION`)
+- **Title**: `marineSim v1.0.0 — stRF for marine SDM under data limitation`
 - **Description**: one paragraph on what the release contains, and note that it
   accompanies the MEE submission.
 - **Publish release.**
@@ -171,7 +171,7 @@ The trimmed manuscript (Working_manuscript_TRIMMED.docx) refers to "the archived
 marineSim R package" in the abstract, introduction and Section 3 but no longer carries
 a Data Availability Statement or a DOI placeholder; MEE requires one. Add the statement
 below (with the Zenodo **version** DOI and your real repository URL) after the
-Acknowledgements, and remove the `GITHUB-USER` placeholder from `README.md`,
+Acknowledgements, and remove the `EAfrifa-Yamoah` placeholder from `README.md`,
 `CITATION.cff`, `.zenodo.json` and `marineSim/DESCRIPTION`.
 
 Suggested Data Availability Statement, assuming the seagrass data cannot be redistributed
@@ -179,7 +179,7 @@ Suggested Data Availability Statement, assuming the seagrass data cannot be redi
 
 > All code required to reproduce the simulation study, the case study analyses and every
 > figure and table is archived on Zenodo (doi:10.5281/zenodo.XXXXXXX) and developed at
-> https://github.com/<GITHUB-USER>/marineSim. The simulation study is fully synthetic and
+> https://github.com/EAfrifa-Yamoah/marineSim. The simulation study is fully synthetic and
 > regenerates from the seeds recorded in the archive. The *Posidonia sinuosa* monitoring
 > data underpinning the case study are held by [custodian] and are available on request
 > from [contact]; they are not redistributed here because they are third-party monitoring

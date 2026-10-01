@@ -1,6 +1,6 @@
 {
   "title": "marineSim: spatio-temporal random forests for marine species distribution modelling under data limitation",
-  "description": "<p>Simulation benchmark, R package (marineSim) and applied analysis code for the spatio-temporal random forest (stRF) method. stRF augments an ordinary random forest with coordinates, Euclidean distance fields, multi scale spatial lags and temporal features built from the training sites alone.</p><p>The repository contains: the R simulation engine and the expanded benchmark (six ground truth worlds &times; six field realisations &times; three sampling designs &times; five sample sizes &times; four timestep spans, with detection and Poisson abundance extensions; 3,779 datasets and an exact Shapley decomposition over feature block coalitions); GAM and sdmTMB comparators; the Posidonia sinuosa seagrass case study for five Western Australian marine parks; and all code and stored results needed to regenerate every figure, table and number reported in the associated article.</p><p>Version 3.0.0 accompanies the article submitted to Methods in Ecology and Evolution.</p>",
+  "description": "<p>Simulation benchmark, R package (marineSim) and applied analysis code for the spatio-temporal random forest (stRF) method. stRF augments an ordinary random forest with coordinates, Euclidean distance fields, multi scale spatial lags and temporal features built from the training sites alone.</p><p>The repository contains: the R simulation engine and the expanded benchmark (six ground truth worlds &times; six field realisations &times; three sampling designs &times; five sample sizes &times; four timestep spans, with detection and Poisson abundance extensions; 3,779 datasets and an exact Shapley decomposition over feature block coalitions); GAM and sdmTMB comparators; the Posidonia sinuosa seagrass case study for five Western Australian marine parks; and all code and stored results needed to regenerate every figure, table and number reported in the associated article.</p><p>Version 1.0.0 accompanies the article submitted to Methods in Ecology and Evolution.</p>",
   "upload_type": "software",
   "license": "MIT",
   "access_right": "open",
@@ -45,5 +45,5 @@
     }
   ],
   "notes": "On acceptance, add the article DOI as a related identifier with relation 'isSupplementTo' and scheme 'doi'.",
-  "version": "3.0.0"
+  "version": "1.0.0"
 }

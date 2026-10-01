@@ -28,8 +28,8 @@ full benchmark, the auxiliary studies and the seagrass case study.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/GITHUB-USER/marineSim}
-  \item Report bugs at \url{https://github.com/GITHUB-USER/marineSim/issues}
+  \item \url{https://github.com/EAfrifa-Yamoah/marineSim}
+  \item Report bugs at \url{https://github.com/EAfrifa-Yamoah/marineSim/issues}
 }
 
 }
