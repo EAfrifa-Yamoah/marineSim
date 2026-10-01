@@ -6,12 +6,12 @@ abstract: >-
   forest (stRF) method. stRF augments an ordinary random forest with multi scale spatial
   lags, temporal features and Euclidean distance fields, and is evaluated against a
   generalised linear model, a generalised additive model, a standard random forest, a
-  spatial random forest and a Gaussian process comparator across a factorial simulation
+  spatial random forest and an sdmTMB Matérn random field comparator across a factorial simulation
   and a Posidonia sinuosa seagrass case study in Western Australia.
 type: software
-version: 0.3.0
+version: 1.0.0
 # TODO release day: set to the date you cut the GitHub release (YYYY-MM-DD)
-date-released: 2026-07-13
+date-released: 2026-10-01
 license: MIT
 # TODO release day: replace <GITHUB-USER> with your GitHub account name
 repository-code: "https://github.com/<GITHUB-USER>/marineSim"

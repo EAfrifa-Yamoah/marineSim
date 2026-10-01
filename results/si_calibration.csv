@@ -1,6 +1,0 @@
-method,brier_mean,brier_sd
-GLM,0.2169,0.0126
-GAM,0.2341,0.0076
-RF,0.2165,0.014
-SpatialRF,0.171,0.0269
-stRF,0.1531,0.0309

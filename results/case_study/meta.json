@@ -1,0 +1,17 @@
+{
+  "n_siteyears": 748,
+  "n_sites": 61,
+  "n_coords": 61,
+  "corridor_cells": 2127,
+  "static_inside_pct": 92.900799,
+  "static_DI_thresh": 0.429751,
+  "temporal_DI_thresh": 2.508638,
+  "temporal_outside_pct": 29.638415,
+  "oof_spearman": 0.563299,
+  "oof_bias": -0.605694,
+  "leakage": {
+    "no_leakage": true,
+    "non_vacuous": true
+  },
+  "runtime_min": 2.97012
+}

@@ -1,0 +1,487 @@
+"cfg","n","method","min_node_size","mtry_rule","auc"
+"stat_r30",50,"Standard RF",1,"sqrt",0.625219181431992
+"stat_r30",50,"Standard RF",1,"half",0.625219181431992
+"stat_r30",50,"Standard RF",1,"p8",0.613145009487594
+"stat_r30",50,"Standard RF",3,"sqrt",0.627714769369004
+"stat_r30",50,"Standard RF",3,"half",0.627714769369004
+"stat_r30",50,"Standard RF",3,"p8",0.617184582517425
+"stat_r30",50,"Standard RF",5,"sqrt",0.63386511882714
+"stat_r30",50,"Standard RF",5,"half",0.63386511882714
+"stat_r30",50,"Standard RF",5,"p8",0.617068949502494
+"stat_r30",50,"Spatial RF",1,"sqrt",0.704562385907179
+"stat_r30",50,"Spatial RF",1,"half",0.702012772709092
+"stat_r30",50,"Spatial RF",1,"p8",0.691216250798531
+"stat_r30",50,"Spatial RF",3,"sqrt",0.706982148916367
+"stat_r30",50,"Spatial RF",3,"half",0.707703433542294
+"stat_r30",50,"Spatial RF",3,"p8",0.688345329468789
+"stat_r30",50,"Spatial RF",5,"sqrt",0.711789449340418
+"stat_r30",50,"Spatial RF",5,"half",0.714174143320487
+"stat_r30",50,"Spatial RF",5,"p8",0.692969702254465
+"stat_r30",50,"stRF",1,"sqrt",0.711973324790391
+"stat_r30",50,"stRF",1,"half",0.708134687819294
+"stat_r30",50,"stRF",1,"p8",0.71155154862937
+"stat_r30",50,"stRF",3,"sqrt",0.714030075957621
+"stat_r30",50,"stRF",3,"half",0.709682464158504
+"stat_r30",50,"stRF",3,"p8",0.710512747118179
+"stat_r30",50,"stRF",5,"sqrt",0.715130485222669
+"stat_r30",50,"stRF",5,"half",0.710980966047493
+"stat_r30",50,"stRF",5,"p8",0.710446400306333
+"stat_r30",100,"Standard RF",1,"sqrt",0.661932786240213
+"stat_r30",100,"Standard RF",1,"half",0.661932786240213
+"stat_r30",100,"Standard RF",1,"p8",0.65774486935469
+"stat_r30",100,"Standard RF",3,"sqrt",0.663981090835155
+"stat_r30",100,"Standard RF",3,"half",0.663981090835155
+"stat_r30",100,"Standard RF",3,"p8",0.664394328756653
+"stat_r30",100,"Standard RF",5,"sqrt",0.66632402747891
+"stat_r30",100,"Standard RF",5,"half",0.66632402747891
+"stat_r30",100,"Standard RF",5,"p8",0.66417970860608
+"stat_r30",100,"Spatial RF",1,"sqrt",0.74575230951991
+"stat_r30",100,"Spatial RF",1,"half",0.734049863414983
+"stat_r30",100,"Spatial RF",1,"p8",0.735995564516888
+"stat_r30",100,"Spatial RF",3,"sqrt",0.744213257124354
+"stat_r30",100,"Spatial RF",3,"half",0.732444918867935
+"stat_r30",100,"Spatial RF",3,"p8",0.73685122116983
+"stat_r30",100,"Spatial RF",5,"sqrt",0.744047585429174
+"stat_r30",100,"Spatial RF",5,"half",0.735652925329131
+"stat_r30",100,"Spatial RF",5,"p8",0.736183827806864
+"stat_r30",100,"stRF",1,"sqrt",0.79245101859853
+"stat_r30",100,"stRF",1,"half",0.763177959640116
+"stat_r30",100,"stRF",1,"p8",0.757467934055135
+"stat_r30",100,"stRF",3,"sqrt",0.792009541183536
+"stat_r30",100,"stRF",3,"half",0.763662737611805
+"stat_r30",100,"stRF",3,"p8",0.757298497094156
+"stat_r30",100,"stRF",5,"sqrt",0.789796506209865
+"stat_r30",100,"stRF",5,"half",0.76417669639344
+"stat_r30",100,"stRF",5,"p8",0.75663016241474
+"stat_r30",200,"Standard RF",1,"sqrt",0.70442901474156
+"stat_r30",200,"Standard RF",1,"half",0.70442901474156
+"stat_r30",200,"Standard RF",1,"p8",0.702839073644201
+"stat_r30",200,"Standard RF",3,"sqrt",0.704043687840318
+"stat_r30",200,"Standard RF",3,"half",0.704043687840318
+"stat_r30",200,"Standard RF",3,"p8",0.705350245318559
+"stat_r30",200,"Standard RF",5,"sqrt",0.706807379571314
+"stat_r30",200,"Standard RF",5,"half",0.706807379571314
+"stat_r30",200,"Standard RF",5,"p8",0.707118820974503
+"stat_r30",200,"Spatial RF",1,"sqrt",0.759326875054946
+"stat_r30",200,"Spatial RF",1,"half",0.761720204036206
+"stat_r30",200,"Spatial RF",1,"p8",0.757209447617052
+"stat_r30",200,"Spatial RF",3,"sqrt",0.758127872415644
+"stat_r30",200,"Spatial RF",3,"half",0.759053779289988
+"stat_r30",200,"Spatial RF",3,"p8",0.756124546632972
+"stat_r30",200,"Spatial RF",5,"sqrt",0.757081317069795
+"stat_r30",200,"Spatial RF",5,"half",0.757274915779885
+"stat_r30",200,"Spatial RF",5,"p8",0.753384236388701
+"stat_r30",200,"stRF",1,"sqrt",0.794895727921797
+"stat_r30",200,"stRF",1,"half",0.792426642923546
+"stat_r30",200,"stRF",1,"p8",0.781611302423631
+"stat_r30",200,"stRF",3,"sqrt",0.797124451236507
+"stat_r30",200,"stRF",3,"half",0.792197504353633
+"stat_r30",200,"stRF",3,"p8",0.783852184111438
+"stat_r30",200,"stRF",5,"sqrt",0.796593223858095
+"stat_r30",200,"stRF",5,"half",0.794925656224806
+"stat_r30",200,"stRF",5,"p8",0.787946750066871
+"stat_r80",50,"Standard RF",1,"sqrt",0.64782589633366
+"stat_r80",50,"Standard RF",1,"half",0.64782589633366
+"stat_r80",50,"Standard RF",1,"p8",0.650911626605759
+"stat_r80",50,"Standard RF",3,"sqrt",0.649209046743177
+"stat_r80",50,"Standard RF",3,"half",0.649209046743177
+"stat_r80",50,"Standard RF",3,"p8",0.653877309861184
+"stat_r80",50,"Standard RF",5,"sqrt",0.649922021633516
+"stat_r80",50,"Standard RF",5,"half",0.649922021633516
+"stat_r80",50,"Standard RF",5,"p8",0.653255153148677
+"stat_r80",50,"Spatial RF",1,"sqrt",0.691199405401907
+"stat_r80",50,"Spatial RF",1,"half",0.671134851423549
+"stat_r80",50,"Spatial RF",1,"p8",0.675774929589815
+"stat_r80",50,"Spatial RF",3,"sqrt",0.690883107610146
+"stat_r80",50,"Spatial RF",3,"half",0.673395910885446
+"stat_r80",50,"Spatial RF",3,"p8",0.672796719689172
+"stat_r80",50,"Spatial RF",5,"sqrt",0.68322619572048
+"stat_r80",50,"Spatial RF",5,"half",0.673134939110065
+"stat_r80",50,"Spatial RF",5,"p8",0.674028506468968
+"stat_r80",50,"stRF",1,"sqrt",0.722173623478274
+"stat_r80",50,"stRF",1,"half",0.714218159877573
+"stat_r80",50,"stRF",1,"p8",0.717042918374292
+"stat_r80",50,"stRF",3,"sqrt",0.722641284899756
+"stat_r80",50,"stRF",3,"half",0.714169097183801
+"stat_r80",50,"stRF",3,"p8",0.716697391743688
+"stat_r80",50,"stRF",5,"sqrt",0.720190237985381
+"stat_r80",50,"stRF",5,"half",0.711997812012635
+"stat_r80",50,"stRF",5,"p8",0.715807999933191
+"stat_r80",100,"Standard RF",1,"sqrt",0.688986833926654
+"stat_r80",100,"Standard RF",1,"half",0.688986833926654
+"stat_r80",100,"Standard RF",1,"p8",0.684979040180487
+"stat_r80",100,"Standard RF",3,"sqrt",0.688002151442282
+"stat_r80",100,"Standard RF",3,"half",0.688002151442282
+"stat_r80",100,"Standard RF",3,"p8",0.684077024982263
+"stat_r80",100,"Standard RF",5,"sqrt",0.686422055213376
+"stat_r80",100,"Standard RF",5,"half",0.686422055213376
+"stat_r80",100,"Standard RF",5,"p8",0.686181378304337
+"stat_r80",100,"Spatial RF",1,"sqrt",0.741497303372197
+"stat_r80",100,"Spatial RF",1,"half",0.737588919653676
+"stat_r80",100,"Spatial RF",1,"p8",0.724368432398042
+"stat_r80",100,"Spatial RF",3,"sqrt",0.737473813305875
+"stat_r80",100,"Spatial RF",3,"half",0.73429583168522
+"stat_r80",100,"Spatial RF",3,"p8",0.724803743676999
+"stat_r80",100,"Spatial RF",5,"sqrt",0.736438902597009
+"stat_r80",100,"Spatial RF",5,"half",0.730886590947618
+"stat_r80",100,"Spatial RF",5,"p8",0.724450053262846
+"stat_r80",100,"stRF",1,"sqrt",0.818481475202953
+"stat_r80",100,"stRF",1,"half",0.813354010619084
+"stat_r80",100,"stRF",1,"p8",0.806367055307554
+"stat_r80",100,"stRF",3,"sqrt",0.820263530751184
+"stat_r80",100,"stRF",3,"half",0.81392117098734
+"stat_r80",100,"stRF",3,"p8",0.805504804120389
+"stat_r80",100,"stRF",5,"sqrt",0.818644716932562
+"stat_r80",100,"stRF",5,"half",0.812169461658076
+"stat_r80",100,"stRF",5,"p8",0.804405015288216
+"stat_r80",200,"Standard RF",1,"sqrt",0.720188531364589
+"stat_r80",200,"Standard RF",1,"half",0.720188531364589
+"stat_r80",200,"Standard RF",1,"p8",0.720110581717925
+"stat_r80",200,"Standard RF",3,"sqrt",0.718516351273142
+"stat_r80",200,"Standard RF",3,"half",0.718516351273142
+"stat_r80",200,"Standard RF",3,"p8",0.718977642332851
+"stat_r80",200,"Standard RF",5,"sqrt",0.716114861473868
+"stat_r80",200,"Standard RF",5,"half",0.716114861473868
+"stat_r80",200,"Standard RF",5,"p8",0.718063602640464
+"stat_r80",200,"Spatial RF",1,"sqrt",0.762364629226633
+"stat_r80",200,"Spatial RF",1,"half",0.757417496171925
+"stat_r80",200,"Spatial RF",1,"p8",0.748512015991423
+"stat_r80",200,"Spatial RF",3,"sqrt",0.763099277951355
+"stat_r80",200,"Spatial RF",3,"half",0.757599022746348
+"stat_r80",200,"Spatial RF",3,"p8",0.746011220477906
+"stat_r80",200,"Spatial RF",5,"sqrt",0.764689237182622
+"stat_r80",200,"Spatial RF",5,"half",0.755649213776372
+"stat_r80",200,"Spatial RF",5,"p8",0.747576620231457
+"stat_r80",200,"stRF",1,"sqrt",0.818134931906178
+"stat_r80",200,"stRF",1,"half",0.81378256533355
+"stat_r80",200,"stRF",1,"p8",0.809677929144839
+"stat_r80",200,"stRF",3,"sqrt",0.817352232029403
+"stat_r80",200,"stRF",3,"half",0.815035098697066
+"stat_r80",200,"stRF",3,"p8",0.810622935135216
+"stat_r80",200,"stRF",5,"sqrt",0.817381062720635
+"stat_r80",200,"stRF",5,"half",0.816763872367598
+"stat_r80",200,"stRF",5,"p8",0.809739861740818
+"stat_r200",50,"Standard RF",1,"sqrt",0.562144616119101
+"stat_r200",50,"Standard RF",1,"half",0.562144616119101
+"stat_r200",50,"Standard RF",1,"p8",0.560840904314898
+"stat_r200",50,"Standard RF",3,"sqrt",0.563773745814963
+"stat_r200",50,"Standard RF",3,"half",0.563773745814963
+"stat_r200",50,"Standard RF",3,"p8",0.557254166675168
+"stat_r200",50,"Standard RF",5,"sqrt",0.560061533564968
+"stat_r200",50,"Standard RF",5,"half",0.560061533564968
+"stat_r200",50,"Standard RF",5,"p8",0.555245552792167
+"stat_r200",50,"Spatial RF",1,"sqrt",0.605147723400913
+"stat_r200",50,"Spatial RF",1,"half",0.605826102391362
+"stat_r200",50,"Spatial RF",1,"p8",0.612065148865934
+"stat_r200",50,"Spatial RF",3,"sqrt",0.601819075813188
+"stat_r200",50,"Spatial RF",3,"half",0.598100742850498
+"stat_r200",50,"Spatial RF",3,"p8",0.608031599199411
+"stat_r200",50,"Spatial RF",5,"sqrt",0.593439820132656
+"stat_r200",50,"Spatial RF",5,"half",0.599412615604961
+"stat_r200",50,"Spatial RF",5,"p8",0.592183033792455
+"stat_r200",50,"stRF",1,"sqrt",0.782724900487413
+"stat_r200",50,"stRF",1,"half",0.757167864626157
+"stat_r200",50,"stRF",1,"p8",0.750847208648975
+"stat_r200",50,"stRF",3,"sqrt",0.781874121422698
+"stat_r200",50,"stRF",3,"half",0.757828901597302
+"stat_r200",50,"stRF",3,"p8",0.752501841314403
+"stat_r200",50,"stRF",5,"sqrt",0.781467094028429
+"stat_r200",50,"stRF",5,"half",0.755051118152198
+"stat_r200",50,"stRF",5,"p8",0.753460752970076
+"stat_r200",100,"Standard RF",1,"sqrt",0.630588538397208
+"stat_r200",100,"Standard RF",1,"half",0.630588538397208
+"stat_r200",100,"Standard RF",1,"p8",0.627070557949041
+"stat_r200",100,"Standard RF",3,"sqrt",0.629862654608135
+"stat_r200",100,"Standard RF",3,"half",0.629862654608135
+"stat_r200",100,"Standard RF",3,"p8",0.62553086641898
+"stat_r200",100,"Standard RF",5,"sqrt",0.634405051333275
+"stat_r200",100,"Standard RF",5,"half",0.634405051333275
+"stat_r200",100,"Standard RF",5,"p8",0.622746948732157
+"stat_r200",100,"Spatial RF",1,"sqrt",0.728970328733343
+"stat_r200",100,"Spatial RF",1,"half",0.705213481399995
+"stat_r200",100,"Spatial RF",1,"p8",0.72371738379214
+"stat_r200",100,"Spatial RF",3,"sqrt",0.71848386391008
+"stat_r200",100,"Spatial RF",3,"half",0.706518027477257
+"stat_r200",100,"Spatial RF",3,"p8",0.723769524740369
+"stat_r200",100,"Spatial RF",5,"sqrt",0.724614003627374
+"stat_r200",100,"Spatial RF",5,"half",0.704787152470356
+"stat_r200",100,"Spatial RF",5,"p8",0.714880004253066
+"stat_r200",100,"stRF",1,"sqrt",0.841596821651375
+"stat_r200",100,"stRF",1,"half",0.836310138449553
+"stat_r200",100,"stRF",1,"p8",0.826863425476272
+"stat_r200",100,"stRF",3,"sqrt",0.841288065448136
+"stat_r200",100,"stRF",3,"half",0.834752044231882
+"stat_r200",100,"stRF",3,"p8",0.828508421274325
+"stat_r200",100,"stRF",5,"sqrt",0.842298168523634
+"stat_r200",100,"stRF",5,"half",0.834650829450025
+"stat_r200",100,"stRF",5,"p8",0.82851251076046
+"stat_r200",200,"Standard RF",1,"sqrt",0.652679078145434
+"stat_r200",200,"Standard RF",1,"half",0.652679078145434
+"stat_r200",200,"Standard RF",1,"p8",0.644301946850248
+"stat_r200",200,"Standard RF",3,"sqrt",0.654899819873171
+"stat_r200",200,"Standard RF",3,"half",0.654899819873171
+"stat_r200",200,"Standard RF",3,"p8",0.644912650825376
+"stat_r200",200,"Standard RF",5,"sqrt",0.664644352324788
+"stat_r200",200,"Standard RF",5,"half",0.664644352324788
+"stat_r200",200,"Standard RF",5,"p8",0.648740345942211
+"stat_r200",200,"Spatial RF",1,"sqrt",0.78601508459381
+"stat_r200",200,"Spatial RF",1,"half",0.777474482032554
+"stat_r200",200,"Spatial RF",1,"p8",0.77021800281294
+"stat_r200",200,"Spatial RF",3,"sqrt",0.782312820259745
+"stat_r200",200,"Spatial RF",3,"half",0.780034503746474
+"stat_r200",200,"Spatial RF",3,"p8",0.772663903076961
+"stat_r200",200,"Spatial RF",5,"sqrt",0.779649986428801
+"stat_r200",200,"Spatial RF",5,"half",0.78059894226894
+"stat_r200",200,"Spatial RF",5,"p8",0.774924741530338
+"stat_r200",200,"stRF",1,"sqrt",0.85808843487058
+"stat_r200",200,"stRF",1,"half",0.836690148954195
+"stat_r200",200,"stRF",1,"p8",0.824599443992071
+"stat_r200",200,"stRF",3,"sqrt",0.856949276613945
+"stat_r200",200,"stRF",3,"half",0.836012617103001
+"stat_r200",200,"stRF",3,"p8",0.825428109655292
+"stat_r200",200,"stRF",5,"sqrt",0.858037028812068
+"stat_r200",200,"stRF",5,"half",0.838015397142646
+"stat_r200",200,"stRF",5,"p8",0.82538184420263
+"nonstat_r30",50,"Standard RF",1,"sqrt",0.60617078064521
+"nonstat_r30",50,"Standard RF",1,"half",0.60617078064521
+"nonstat_r30",50,"Standard RF",1,"p8",0.620961824974358
+"nonstat_r30",50,"Standard RF",3,"sqrt",0.612177039582538
+"nonstat_r30",50,"Standard RF",3,"half",0.612177039582538
+"nonstat_r30",50,"Standard RF",3,"p8",0.621737641219145
+"nonstat_r30",50,"Standard RF",5,"sqrt",0.612394155829571
+"nonstat_r30",50,"Standard RF",5,"half",0.612394155829571
+"nonstat_r30",50,"Standard RF",5,"p8",0.61966380672162
+"nonstat_r30",50,"Spatial RF",1,"sqrt",0.653204523504705
+"nonstat_r30",50,"Spatial RF",1,"half",0.664797782419573
+"nonstat_r30",50,"Spatial RF",1,"p8",0.661282745247775
+"nonstat_r30",50,"Spatial RF",3,"sqrt",0.654364036565371
+"nonstat_r30",50,"Spatial RF",3,"half",0.6639096646677
+"nonstat_r30",50,"Spatial RF",3,"p8",0.661850803704452
+"nonstat_r30",50,"Spatial RF",5,"sqrt",0.655977434883843
+"nonstat_r30",50,"Spatial RF",5,"half",0.663519416930575
+"nonstat_r30",50,"Spatial RF",5,"p8",0.662772611908452
+"nonstat_r30",50,"stRF",1,"sqrt",0.682583533604354
+"nonstat_r30",50,"stRF",1,"half",0.691093180303813
+"nonstat_r30",50,"stRF",1,"p8",0.687489237772238
+"nonstat_r30",50,"stRF",3,"sqrt",0.681204096758979
+"nonstat_r30",50,"stRF",3,"half",0.691777283651147
+"nonstat_r30",50,"stRF",3,"p8",0.687726006783011
+"nonstat_r30",50,"stRF",5,"sqrt",0.681512925903466
+"nonstat_r30",50,"stRF",5,"half",0.693137067732782
+"nonstat_r30",50,"stRF",5,"p8",0.688498079644229
+"nonstat_r30",100,"Standard RF",1,"sqrt",0.646383337292867
+"nonstat_r30",100,"Standard RF",1,"half",0.646383337292867
+"nonstat_r30",100,"Standard RF",1,"p8",0.636938921720021
+"nonstat_r30",100,"Standard RF",3,"sqrt",0.649754818257409
+"nonstat_r30",100,"Standard RF",3,"half",0.649754818257409
+"nonstat_r30",100,"Standard RF",3,"p8",0.635419760052266
+"nonstat_r30",100,"Standard RF",5,"sqrt",0.65042670160955
+"nonstat_r30",100,"Standard RF",5,"half",0.65042670160955
+"nonstat_r30",100,"Standard RF",5,"p8",0.639956828710578
+"nonstat_r30",100,"Spatial RF",1,"sqrt",0.760820662825919
+"nonstat_r30",100,"Spatial RF",1,"half",0.763213087248322
+"nonstat_r30",100,"Spatial RF",1,"p8",0.751072786125794
+"nonstat_r30",100,"Spatial RF",3,"sqrt",0.763846921957593
+"nonstat_r30",100,"Spatial RF",3,"half",0.760844791233593
+"nonstat_r30",100,"Spatial RF",3,"p8",0.750423175149967
+"nonstat_r30",100,"Spatial RF",5,"sqrt",0.761314367167548
+"nonstat_r30",100,"Spatial RF",5,"half",0.758018983488745
+"nonstat_r30",100,"Spatial RF",5,"p8",0.751021745263408
+"nonstat_r30",100,"stRF",1,"sqrt",0.785667354635624
+"nonstat_r30",100,"stRF",1,"half",0.776991336045614
+"nonstat_r30",100,"stRF",1,"p8",0.769262821464631
+"nonstat_r30",100,"stRF",3,"sqrt",0.785826045316862
+"nonstat_r30",100,"stRF",3,"half",0.7759927911742
+"nonstat_r30",100,"stRF",3,"p8",0.768588154065451
+"nonstat_r30",100,"stRF",5,"sqrt",0.785416790402091
+"nonstat_r30",100,"stRF",5,"half",0.772550781017996
+"nonstat_r30",100,"stRF",5,"p8",0.76585050781018
+"nonstat_r30",200,"Standard RF",1,"sqrt",0.717379906330936
+"nonstat_r30",200,"Standard RF",1,"half",0.717379906330936
+"nonstat_r30",200,"Standard RF",1,"p8",0.709846221351266
+"nonstat_r30",200,"Standard RF",3,"sqrt",0.716177900570976
+"nonstat_r30",200,"Standard RF",3,"half",0.716177900570976
+"nonstat_r30",200,"Standard RF",3,"p8",0.711576254390156
+"nonstat_r30",200,"Standard RF",5,"sqrt",0.71708986317772
+"nonstat_r30",200,"Standard RF",5,"half",0.71708986317772
+"nonstat_r30",200,"Standard RF",5,"p8",0.712338547292838
+"nonstat_r30",200,"Spatial RF",1,"sqrt",0.810674331738716
+"nonstat_r30",200,"Spatial RF",1,"half",0.817725541088517
+"nonstat_r30",200,"Spatial RF",1,"p8",0.81345484158252
+"nonstat_r30",200,"Spatial RF",3,"sqrt",0.809213890092237
+"nonstat_r30",200,"Spatial RF",3,"half",0.818339093912626
+"nonstat_r30",200,"Spatial RF",3,"p8",0.8113529583472
+"nonstat_r30",200,"Spatial RF",5,"sqrt",0.806481720773969
+"nonstat_r30",200,"Spatial RF",5,"half",0.813872243428013
+"nonstat_r30",200,"Spatial RF",5,"p8",0.810194644985321
+"nonstat_r30",200,"stRF",1,"sqrt",0.840280114752971
+"nonstat_r30",200,"stRF",1,"half",0.823011391630768
+"nonstat_r30",200,"stRF",1,"p8",0.821201410799645
+"nonstat_r30",200,"stRF",3,"sqrt",0.839053938730243
+"nonstat_r30",200,"stRF",3,"half",0.822695318963802
+"nonstat_r30",200,"stRF",3,"p8",0.820558109959822
+"nonstat_r30",200,"stRF",5,"sqrt",0.837960699152739
+"nonstat_r30",200,"stRF",5,"half",0.823403693588001
+"nonstat_r30",200,"stRF",5,"p8",0.820161159875133
+"nonstat_r80",50,"Standard RF",1,"sqrt",0.59584203408804
+"nonstat_r80",50,"Standard RF",1,"half",0.59584203408804
+"nonstat_r80",50,"Standard RF",1,"p8",0.598956692258465
+"nonstat_r80",50,"Standard RF",3,"sqrt",0.599513475324431
+"nonstat_r80",50,"Standard RF",3,"half",0.599513475324431
+"nonstat_r80",50,"Standard RF",3,"p8",0.599093686334449
+"nonstat_r80",50,"Standard RF",5,"sqrt",0.597822577015134
+"nonstat_r80",50,"Standard RF",5,"half",0.597822577015134
+"nonstat_r80",50,"Standard RF",5,"p8",0.595784300870304
+"nonstat_r80",50,"Spatial RF",1,"sqrt",0.712913257308145
+"nonstat_r80",50,"Spatial RF",1,"half",0.712844760270152
+"nonstat_r80",50,"Spatial RF",1,"p8",0.714711793820001
+"nonstat_r80",50,"Spatial RF",3,"sqrt",0.714939791103605
+"nonstat_r80",50,"Spatial RF",3,"half",0.712987625520822
+"nonstat_r80",50,"Spatial RF",3,"p8",0.717213892764951
+"nonstat_r80",50,"Spatial RF",5,"sqrt",0.715077763708704
+"nonstat_r80",50,"Spatial RF",5,"half",0.713419156860174
+"nonstat_r80",50,"Spatial RF",5,"p8",0.718276575382947
+"nonstat_r80",50,"stRF",1,"sqrt",0.729582500768145
+"nonstat_r80",50,"stRF",1,"half",0.720782588444354
+"nonstat_r80",50,"stRF",1,"p8",0.715915384630439
+"nonstat_r80",50,"stRF",3,"sqrt",0.730174510882222
+"nonstat_r80",50,"stRF",3,"half",0.722010642482646
+"nonstat_r80",50,"stRF",3,"p8",0.716602312068591
+"nonstat_r80",50,"stRF",5,"sqrt",0.730483726082302
+"nonstat_r80",50,"stRF",5,"half",0.721281638292584
+"nonstat_r80",50,"stRF",5,"p8",0.7170309078206
+"nonstat_r80",100,"Standard RF",1,"sqrt",0.682620931520576
+"nonstat_r80",100,"Standard RF",1,"half",0.682620931520576
+"nonstat_r80",100,"Standard RF",1,"p8",0.679788089735034
+"nonstat_r80",100,"Standard RF",3,"sqrt",0.681488773335473
+"nonstat_r80",100,"Standard RF",3,"half",0.681488773335473
+"nonstat_r80",100,"Standard RF",3,"p8",0.679937804689503
+"nonstat_r80",100,"Standard RF",5,"sqrt",0.683676764434772
+"nonstat_r80",100,"Standard RF",5,"half",0.683676764434772
+"nonstat_r80",100,"Standard RF",5,"p8",0.680967217317617
+"nonstat_r80",100,"Spatial RF",1,"sqrt",0.785752028980118
+"nonstat_r80",100,"Spatial RF",1,"half",0.787348988494455
+"nonstat_r80",100,"Spatial RF",1,"p8",0.789847173322948
+"nonstat_r80",100,"Spatial RF",3,"sqrt",0.784081679782219
+"nonstat_r80",100,"Spatial RF",3,"half",0.789245377917729
+"nonstat_r80",100,"Spatial RF",3,"p8",0.791765090386734
+"nonstat_r80",100,"Spatial RF",5,"sqrt",0.783647212855524
+"nonstat_r80",100,"Spatial RF",5,"half",0.786342082035967
+"nonstat_r80",100,"Spatial RF",5,"p8",0.792235762890653
+"nonstat_r80",100,"stRF",1,"sqrt",0.832315336878218
+"nonstat_r80",100,"stRF",1,"half",0.826662374185619
+"nonstat_r80",100,"stRF",1,"p8",0.814845656602821
+"nonstat_r80",100,"stRF",3,"sqrt",0.83149337242231
+"nonstat_r80",100,"stRF",3,"half",0.827091948466743
+"nonstat_r80",100,"stRF",3,"p8",0.817064960633774
+"nonstat_r80",100,"stRF",5,"sqrt",0.829486409209133
+"nonstat_r80",100,"stRF",5,"half",0.825768977104376
+"nonstat_r80",100,"stRF",5,"p8",0.814932745693983
+"nonstat_r80",200,"Standard RF",1,"sqrt",0.678492682495823
+"nonstat_r80",200,"Standard RF",1,"half",0.678492682495823
+"nonstat_r80",200,"Standard RF",1,"p8",0.669884976224136
+"nonstat_r80",200,"Standard RF",3,"sqrt",0.682685588291993
+"nonstat_r80",200,"Standard RF",3,"half",0.682685588291993
+"nonstat_r80",200,"Standard RF",3,"p8",0.668906029109369
+"nonstat_r80",200,"Standard RF",5,"sqrt",0.685121409523198
+"nonstat_r80",200,"Standard RF",5,"half",0.685121409523198
+"nonstat_r80",200,"Standard RF",5,"p8",0.670479372831256
+"nonstat_r80",200,"Spatial RF",1,"sqrt",0.808776988818918
+"nonstat_r80",200,"Spatial RF",1,"half",0.811146542860815
+"nonstat_r80",200,"Spatial RF",1,"p8",0.810202737437347
+"nonstat_r80",200,"Spatial RF",3,"sqrt",0.808927596067344
+"nonstat_r80",200,"Spatial RF",3,"half",0.812890574797584
+"nonstat_r80",200,"Spatial RF",3,"p8",0.808993863256651
+"nonstat_r80",200,"Spatial RF",5,"sqrt",0.805062010024418
+"nonstat_r80",200,"Spatial RF",5,"half",0.811547158141627
+"nonstat_r80",200,"Spatial RF",5,"p8",0.809582235573834
+"nonstat_r80",200,"stRF",1,"sqrt",0.837629321423981
+"nonstat_r80",200,"stRF",1,"half",0.824837745791029
+"nonstat_r80",200,"stRF",1,"p8",0.81590372381442
+"nonstat_r80",200,"stRF",3,"sqrt",0.83815945893844
+"nonstat_r80",200,"stRF",3,"half",0.824501389602879
+"nonstat_r80",200,"stRF",3,"p8",0.816845521141242
+"nonstat_r80",200,"stRF",5,"sqrt",0.836713629353554
+"nonstat_r80",200,"stRF",5,"half",0.824625891594911
+"nonstat_r80",200,"stRF",5,"p8",0.817802379192906
+"nonstat_r200",50,"Standard RF",1,"sqrt",0.753138631038418
+"nonstat_r200",50,"Standard RF",1,"half",0.753138631038418
+"nonstat_r200",50,"Standard RF",1,"p8",0.756140321951273
+"nonstat_r200",50,"Standard RF",3,"sqrt",0.754009735114746
+"nonstat_r200",50,"Standard RF",3,"half",0.754009735114746
+"nonstat_r200",50,"Standard RF",3,"p8",0.758768289979647
+"nonstat_r200",50,"Standard RF",5,"sqrt",0.755725379631004
+"nonstat_r200",50,"Standard RF",5,"half",0.755725379631004
+"nonstat_r200",50,"Standard RF",5,"p8",0.755811482452428
+"nonstat_r200",50,"Spatial RF",1,"sqrt",0.838596597289776
+"nonstat_r200",50,"Spatial RF",1,"half",0.842855938987907
+"nonstat_r200",50,"Spatial RF",1,"p8",0.843568577233315
+"nonstat_r200",50,"Spatial RF",3,"sqrt",0.840598029894167
+"nonstat_r200",50,"Spatial RF",3,"half",0.844637534601426
+"nonstat_r200",50,"Spatial RF",3,"p8",0.844884851216157
+"nonstat_r200",50,"Spatial RF",5,"sqrt",0.840714360301836
+"nonstat_r200",50,"Spatial RF",5,"half",0.843282789145182
+"nonstat_r200",50,"Spatial RF",5,"p8",0.843152718925583
+"nonstat_r200",50,"stRF",1,"sqrt",0.854901174112729
+"nonstat_r200",50,"stRF",1,"half",0.841513101368668
+"nonstat_r200",50,"stRF",1,"p8",0.843336832405438
+"nonstat_r200",50,"stRF",3,"sqrt",0.854731716432265
+"nonstat_r200",50,"stRF",3,"half",0.841789729582181
+"nonstat_r200",50,"stRF",3,"p8",0.842486796040736
+"nonstat_r200",50,"stRF",5,"sqrt",0.856629642453454
+"nonstat_r200",50,"stRF",5,"half",0.844032066889068
+"nonstat_r200",50,"stRF",5,"p8",0.843989015478356
+"nonstat_r200",100,"Standard RF",1,"sqrt",0.716521385872163
+"nonstat_r200",100,"Standard RF",1,"half",0.716521385872163
+"nonstat_r200",100,"Standard RF",1,"p8",0.713468099499268
+"nonstat_r200",100,"Standard RF",3,"sqrt",0.71386423629238
+"nonstat_r200",100,"Standard RF",3,"half",0.71386423629238
+"nonstat_r200",100,"Standard RF",3,"p8",0.716750244483496
+"nonstat_r200",100,"Standard RF",5,"sqrt",0.717591230946831
+"nonstat_r200",100,"Standard RF",5,"half",0.717591230946831
+"nonstat_r200",100,"Standard RF",5,"p8",0.722088440526173
+"nonstat_r200",100,"Spatial RF",1,"sqrt",0.819666767156124
+"nonstat_r200",100,"Spatial RF",1,"half",0.814404857317226
+"nonstat_r200",100,"Spatial RF",1,"p8",0.806358960595878
+"nonstat_r200",100,"Spatial RF",3,"sqrt",0.819801876456791
+"nonstat_r200",100,"Spatial RF",3,"half",0.815549150373894
+"nonstat_r200",100,"Spatial RF",3,"p8",0.805599775001654
+"nonstat_r200",100,"Spatial RF",5,"sqrt",0.818853354019456
+"nonstat_r200",100,"Spatial RF",5,"half",0.815250439335005
+"nonstat_r200",100,"Spatial RF",5,"p8",0.805709149197432
+"nonstat_r200",100,"stRF",1,"sqrt",0.849072800935287
+"nonstat_r200",100,"stRF",1,"half",0.845112352115058
+"nonstat_r200",100,"stRF",1,"p8",0.846525025551283
+"nonstat_r200",100,"stRF",3,"sqrt",0.849405519077066
+"nonstat_r200",100,"stRF",3,"half",0.846314549157727
+"nonstat_r200",100,"stRF",3,"p8",0.846730906390394
+"nonstat_r200",100,"stRF",5,"sqrt",0.851640796758847
+"nonstat_r200",100,"stRF",5,"half",0.847714355041507
+"nonstat_r200",100,"stRF",5,"p8",0.846706090396394
+"nonstat_r200",200,"Standard RF",1,"sqrt",0.752928860771016
+"nonstat_r200",200,"Standard RF",1,"half",0.752928860771016
+"nonstat_r200",200,"Standard RF",1,"p8",0.737614127713805
+"nonstat_r200",200,"Standard RF",3,"sqrt",0.751685403486414
+"nonstat_r200",200,"Standard RF",3,"half",0.751685403486414
+"nonstat_r200",200,"Standard RF",3,"p8",0.737345591916617
+"nonstat_r200",200,"Standard RF",5,"sqrt",0.75088070638569
+"nonstat_r200",200,"Standard RF",5,"half",0.75088070638569
+"nonstat_r200",200,"Standard RF",5,"p8",0.737232715852715
+"nonstat_r200",200,"Spatial RF",1,"sqrt",0.860234855036184
+"nonstat_r200",200,"Spatial RF",1,"half",0.859967229529835
+"nonstat_r200",200,"Spatial RF",1,"p8",0.855851804651586
+"nonstat_r200",200,"Spatial RF",3,"sqrt",0.859809749214874
+"nonstat_r200",200,"Spatial RF",3,"half",0.859694142278458
+"nonstat_r200",200,"Spatial RF",3,"p8",0.853620681807838
+"nonstat_r200",200,"Spatial RF",5,"sqrt",0.861158800236676
+"nonstat_r200",200,"Spatial RF",5,"half",0.858785672022211
+"nonstat_r200",200,"Spatial RF",5,"p8",0.854757635064403
+"nonstat_r200",200,"stRF",1,"sqrt",0.884069910336353
+"nonstat_r200",200,"stRF",1,"half",0.882973009876656
+"nonstat_r200",200,"stRF",1,"p8",0.879885303354422
+"nonstat_r200",200,"stRF",3,"sqrt",0.885591916617359
+"nonstat_r200",200,"stRF",3,"half",0.884158208547631
+"nonstat_r200",200,"stRF",3,"p8",0.88051249374175
+"nonstat_r200",200,"stRF",5,"sqrt",0.885458103864185
+"nonstat_r200",200,"stRF",5,"half",0.883772245232352
+"nonstat_r200",200,"stRF",5,"p8",0.881158800236676

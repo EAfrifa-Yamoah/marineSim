@@ -1,36 +1,39 @@
 Package: marineSim
-Title: Spatiotemporal Random Forests for Marine Species Distribution Modelling Under Data Limitation
-Version: 0.3.0
+Title: Spatio-Temporal Random Forests for Marine Species Distribution Modelling Under Data Limitation
+Version: 1.0.0
 Authors@R: c(
     person("Ebenezer", "Afrifa-Yamoah", email = "e.afrifayamoah@ecu.edu.au",
-           role = c("aut", "cre")),
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1741-9249")),
     person("Francky", "Fouedjio", role = "aut"),
     person("Ute", "Mueller", role = "aut"),
     person("Kathryn", "McMahon", role = "aut"),
     person("Glenn A.", "Hyndes", role = "aut"))
-Description: Tools for the simulation benchmark and applied analysis behind the
-    spatiotemporal random forest (stRF) method for marine species distribution
-    modelling. The package provides a Matern Gaussian random field generator, a
-    configurable ground truth world simulator with spatial and temporal structure,
-    the stRF feature engineering layer (multi scale spatial lags, temporal lags and
-    Euclidean distance fields), thin wrappers around competing models (GLM, GAM,
-    spatial random forest and a geostatistical comparator), a predictive gain
-    decomposition, and an area of applicability routine for honest extrapolation
-    assessment. The design is built for the data limited regime of tens of survey
-    sites observed over a handful of time points.
+Description: The simulation engine behind the article "Spatio-temporal random
+    forests with adaptive local features for marine species distribution
+    modelling under data limitation". Provides the Matern Gaussian random field
+    generator, the ground truth ecosystem generator of Section 3.1 (occurrence and
+    Poisson abundance), the three sampling designs, the four engineered feature
+    blocks of the stRF method (coordinates, Euclidean distance fields, multi scale
+    spatial lags, temporal features), the random forest and GLM scoring used in
+    the benchmark, the exact Shapley decomposition of predictive gain over feature
+    block coalitions with a cluster bootstrap, and an area of applicability
+    routine. Every reported number in the article is produced by the scripts in
+    the repository's analysis/ directory calling these functions.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
+URL: https://github.com/GITHUB-USER/marineSim
+BugReports: https://github.com/GITHUB-USER/marineSim/issues
 Depends: R (>= 4.1.0)
 Imports:
-    ranger,
-    mgcv,
+    ranger (>= 0.14.0),
     stats,
-    FNN
+    utils
 Suggests:
-    testthat (>= 3.0.0),
-    targets,
-    pROC,
-    ggplot2
+    mgcv,
+    sdmTMB,
+    jsonlite,
+    sp,
+    testthat (>= 3.0.0)
 RoxygenNote: 7.3.1
+Roxygen: list(markdown = FALSE)
 Config/testthat/edition: 3

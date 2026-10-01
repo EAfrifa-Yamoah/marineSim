@@ -36,29 +36,27 @@ The simulation is fully synthetic and has no such constraint. It regenerates fro
 
 ### 0.2 Run the R package check  **[BLOCKER]**
 
-The `marineSim` package has never been executed. It compiles as written, but that is not
-the same as working.
+The package was checked and installed on the preparation machine (R 4.3.3, ranger
+0.16.0; `R CMD check` clean apart from a NOTE that sdmTMB was not installed there).
+Repeat it on your own machine before pushing, because a reviewer will run it:
 
-```r
-install.packages(c("devtools", "ranger", "mgcv", "FNN"))
-devtools::check("marineSim")
-devtools::test("marineSim")
+```bash
+R CMD build marineSim
+_R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-manual marineSim_1.0.0.tar.gz
+R CMD INSTALL marineSim_1.0.0.tar.gz
+cd analysis && Rscript 00_verify_engine.R      # every line PASS
 ```
-
-Fix whatever it reports. Archiving a package that fails `R CMD check` is worse than
-archiving no package, because a reviewer will run it.
 
 ### 0.3 Confirm the outputs are actually committed
 
-`.gitignore` previously excluded `figures/*.png` and `results/*.{csv,json}`, which would
-have pushed empty directories. That is fixed, but verify after your first commit:
+`results/*.csv` and `figures/*.png` are committed on purpose. Verify after the first
+commit:
 
 ```bash
-git ls-files figures/ | wc -l     # expect 20
-git ls-files results/ | wc -l     # expect 25
+git ls-files figures/ | wc -l     # expect 23 (15 png + 7 scripts + figstyle)
+git ls-files results/ | wc -l     # expect 31
+git ls-files data/                # expect data/coast_wa.json only
 ```
-
-If those come back as 0, your `.gitignore` is still excluding them.
 
 ### 0.4 Fill in the placeholders
 
@@ -67,9 +65,9 @@ If those come back as 0, your `.gitignore` is still excluding them.
 | `CITATION.cff` | `<GITHUB-USER>` | your GitHub account name |
 | `CITATION.cff` | `date-released` | the date you cut the release |
 | `.zenodo.json` | `GITHUB-USER` | your GitHub account name |
-| `README.md` | Citation section | the Zenodo DOI, once you have it (step 2.4) |
-| Manuscript | `10.xxxx/figshare.placeholder` | the Zenodo DOI (step 3) |
-| Manuscript | `github.com/eafrifayamoah/marineSim` | your real repository URL |
+| `README.md` | Citation section and `GITHUB-USER` | the Zenodo DOI (step 2.4) and your account name |
+| `marineSim/DESCRIPTION` | `GITHUB-USER` in URL and BugReports | your GitHub account name |
+| Manuscript | (no Data Availability Statement yet) | add one with the Zenodo DOI and repository URL (step 3) |
 
 Co-author ORCIDs are marked `TODO` in `CITATION.cff`. Adding them means Zenodo credits
 every author properly rather than just you.
@@ -86,15 +84,13 @@ this repository already has them.
 
 ### 1.2 Push
 
-From the repository root:
+The repository already carries its git history (the earlier Python based versions
+are in it, before the v1.0.0 commit). From the repository root:
 
 ```bash
-git init
-git branch -M main
-git add .
-git commit -m "marineSim: stRF simulation benchmark, R package and seagrass case study"
 git remote add origin https://github.com/<GITHUB-USER>/marineSim.git
 git push -u origin main
+git push origin v1.0.0
 ```
 
 ### 1.3 Check the result in a browser
@@ -133,8 +129,8 @@ repositories.
 
 Back on GitHub: **Releases** → **Create a new release**.
 
-- **Tag**: `v0.3.0` (match `Version:` in `marineSim/DESCRIPTION`, and keep the `v`)
-- **Title**: `marineSim v0.3.0 — stRF for marine SDM under data limitation`
+- **Tag**: `v1.0.0` (already created locally and pushed in 1.2; it matches `Version:` in `marineSim/DESCRIPTION`)
+- **Title**: `marineSim v1.0.0 — stRF for marine SDM under data limitation`
 - **Description**: one paragraph on what the release contains, and note that it
   accompanies the MEE submission.
 - **Publish release.**
@@ -171,12 +167,12 @@ its files swapped — a correction means a new version, and a new version DOI.
 
 ## Step 3 — Wire the DOI back into the manuscript
 
-Two placeholders currently sit in the manuscript and must both change:
-
-1. `10.xxxx/figshare.placeholder` → your Zenodo **version** DOI. Note the manuscript text
-   currently says *figshare*; that word has to change to *Zenodo* as well, not just the
-   number.
-2. `github.com/eafrifayamoah/marineSim` → your real repository URL.
+The trimmed manuscript (Working_manuscript_TRIMMED.docx) refers to "the archived
+marineSim R package" in the abstract, introduction and Section 3 but no longer carries
+a Data Availability Statement or a DOI placeholder; MEE requires one. Add the statement
+below (with the Zenodo **version** DOI and your real repository URL) after the
+Acknowledgements, and remove the `GITHUB-USER` placeholder from `README.md`,
+`CITATION.cff`, `.zenodo.json` and `marineSim/DESCRIPTION`.
 
 Suggested Data Availability Statement, assuming the seagrass data cannot be redistributed
 (adjust if step 0.1 goes the other way):
@@ -202,9 +198,9 @@ Add the badge to the top of `README.md` (concept DOI, so it tracks the latest ve
 Reviewers will ask for changes, and the code will change with them.
 
 1. Commit and push to `main` as usual.
-2. Bump `Version:` in `marineSim/DESCRIPTION` (e.g. `0.3.1`) and `version:` in
-   `CITATION.cff`.
-3. Cut a new GitHub release (`v0.3.1`).
+2. Bump `Version:` in `marineSim/DESCRIPTION` (e.g. `1.0.1`), `version:` in
+   `CITATION.cff` and `.zenodo.json`, and add an entry to `NEWS.md`.
+3. Cut a new GitHub release (`v1.0.1`).
 4. Zenodo automatically archives it as a **new version** of the same record.
 
 The concept DOI is unchanged. A **new version DOI** is minted, and that is the one the

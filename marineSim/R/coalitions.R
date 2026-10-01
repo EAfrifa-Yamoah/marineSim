@@ -1,214 +1,109 @@
-#' Feature-block coalitions and Shapley decomposition of predictive skill
+#' Coalitions fitted per dataset
 #'
-#' The published decomposition differenced a nested ladder of models
-#' (GLM -> RF -> SpatialRF -> stRF). Because the engineered feature blocks
-#' encode overlapping information, the increment attributed to any one block
-#' depends on the order in which blocks enter, and that dependence spans an
-#' order of magnitude for the temporal block. These functions fit every
-#' coalition of the four blocks on a common random forest backbone and return
-#' an order-free Shapley attribution.
+#' The 16 subsets of \code{BLOCKS} needed for an exact Shapley decomposition,
+#' plus four control coalitions involving the same timestep nearest neighbour
+#' response (NN0): \{NN0\}, \{NN0, TEMP\}, \{COORD, EDF, LAG, NN0\} and
+#' \{COORD, EDF, LAG, NN0, TEMP\}.
 #'
-#' Blocks:
-#'   COORD  raw coordinates (x, y)
-#'   EDF    Euclidean distance fields to k-means anchors
-#'   LAG    multi-scale spatial lags of the response
-#'   TEMP   previous-timestep response at the nearest site, and site history mean
-#'
-#' Environmental covariates are always present and are not part of the
-#' attribution.
-#'
-#' NOTE: these functions mirror python/ablation.py and python/decompose.py.
-#' They were written alongside the Python implementation but have not been
-#' executed, because the revision analyses were run through the Python engine.
-#' Run marineSim's testthat suite before relying on them.
-#'
-#' @name coalitions
-NULL
-
-BLOCKS <- c("COORD", "EDF", "LAG", "TEMP")
-
-
-#' Enumerate all subsets of a character vector
-#'
-#' @param blocks character vector of block names
-#' @return list of character vectors, including the empty set
+#' @return A list of character vectors.
 #' @export
-all_coalitions <- function(blocks = BLOCKS) {
-  out <- list(character(0))
-  for (k in seq_along(blocks)) {
-    cmb <- utils::combn(blocks, k, simplify = FALSE)
-    out <- c(out, cmb)
-  }
-  out
+required_subsets <- function() {
+  subs <- list(character(0))
+  for (k in 1:4) subs <- c(subs, utils::combn(BLOCKS, k, simplify = FALSE))
+  c(subs, list("NN0", c("NN0", "TEMP"), c("COORD", "EDF", "LAG", "NN0"),
+               c("COORD", "EDF", "LAG", "NN0", "TEMP")))
 }
 
-
-#' Assemble a design matrix from covariates plus a chosen set of blocks
-#'
-#' @param covariates numeric matrix of environmental covariates
-#' @param blocks named list of numeric matrices, one per block
-#' @param subset character vector naming the blocks to include
-#' @return numeric matrix
+#' Column name of a coalition's score
+#' @param S Character vector of block names (empty for the covariate only forest).
+#' @return A string such as \code{"v_COORD+LAG"} or \code{"v_BASE"}.
 #' @export
-assemble_design <- function(covariates, blocks, subset) {
-  stopifnot(is.matrix(covariates))
-  parts <- list(covariates)
-  for (b in sort(subset)) {
-    if (is.null(blocks[[b]])) {
-      stop(sprintf("block '%s' not supplied", b))
-    }
-    parts[[length(parts) + 1L]] <- as.matrix(blocks[[b]])
-  }
-  do.call(cbind, parts)
-}
+skey <- function(S) paste0("v_", if (length(S)) paste(sort(S), collapse = "+") else "BASE")
 
-
-#' Evaluate every feature-block coalition on a common forest backbone
+#' Exact Shapley attribution of one dataset's coalition scores
 #'
-#' @param covariates_train,covariates_test covariate matrices
-#' @param blocks_train,blocks_test named lists of block matrices
-#' @param y_train training response
-#' @param y_test test response, used only for scoring
-#' @param metric function(observed, predicted) returning a scalar skill score;
-#'   defaults to AUC for a binary response
-#' @param num.trees,min.node.size passed to ranger
-#' @param seed random seed
-#' @return data.frame with one row per coalition
+#' @param row A named list (or one row data frame coerced to list) holding the
+#'   16 coalition scores named by \code{\link{skey}}.
+#' @return A named numeric vector of Shapley values, one per block.
 #' @export
-coalition_skill <- function(covariates_train, covariates_test,
-                            blocks_train, blocks_test,
-                            y_train, y_test,
-                            metric = auc_binary,
-                            num.trees = 500, min.node.size = 1,
-                            seed = 1L) {
-  subsets <- all_coalitions()
-  res <- vector("list", length(subsets))
-  for (i in seq_along(subsets)) {
-    S <- subsets[[i]]
-    Xtr <- assemble_design(covariates_train, blocks_train, S)
-    Xte <- assemble_design(covariates_test, blocks_test, S)
-    df <- data.frame(.y = y_train, Xtr)
-    set.seed(seed)
-    fit <- ranger::ranger(
-      dependent.variable.name = ".y", data = df,
-      num.trees = num.trees, min.node.size = min.node.size,
-      probability = is.factor(y_train), seed = seed
-    )
-    pr <- stats::predict(fit, data = data.frame(Xte))$predictions
-    if (is.matrix(pr)) pr <- pr[, ncol(pr)]
-    res[[i]] <- data.frame(
-      coalition = if (length(S)) paste(sort(S), collapse = "+") else "BASE",
-      k = length(S),
-      skill = metric(y_test, pr),
-      stringsAsFactors = FALSE
-    )
-  }
-  do.call(rbind, res)
-}
-
-
-#' Shapley value of each feature block
-#'
-#' @param skill data.frame from \code{coalition_skill}
-#' @param blocks character vector of block names
-#' @return named numeric vector of Shapley values
-#' @export
-shapley_blocks <- function(skill, blocks = BLOCKS) {
-  v <- stats::setNames(skill$skill, skill$coalition)
-  key <- function(S) if (length(S)) paste(sort(S), collapse = "+") else "BASE"
-  k <- length(blocks)
-  phi <- stats::setNames(numeric(k), blocks)
-  for (b in blocks) {
-    others <- setdiff(blocks, b)
-    total <- 0
+shapley_row <- function(row) {
+  k <- length(BLOCKS); phi <- stats::setNames(numeric(k), BLOCKS)
+  for (b in BLOCKS) {
+    others <- setdiff(BLOCKS, b); tot <- 0
     for (r in 0:length(others)) {
-      cmb <- if (r == 0) list(character(0)) else
-        utils::combn(others, r, simplify = FALSE)
-      for (S in cmb) {
+      Ss <- if (r == 0) list(character(0)) else utils::combn(others, r, simplify = FALSE)
+      for (S in Ss) {
         w <- factorial(length(S)) * factorial(k - length(S) - 1) / factorial(k)
-        total <- total + w * (v[[key(c(S, b))]] - v[[key(S)]])
+        tot <- tot + w * (row[[skey(c(S, b))]] - row[[skey(S)]])
       }
     }
-    phi[[b]] <- total
+    phi[b] <- tot
   }
   phi
 }
 
-
-#' Sequential (order-dependent) increments along a nested ladder
+#' Add Shapley values and derived quantities to a benchmark table
 #'
-#' Retained for comparison with the Shapley attribution. The spread between
-#' orderings is itself a reportable quantity.
+#' Appends, for each dataset, the block Shapley values (\code{phi_COORD} etc.),
+#' the algorithmic term (covariate only forest minus GLM), the total gain of the
+#' full coalition over the GLM, the temporal increment when added last, the same
+#' increment with the NN0 control present, the spatial total, and a
+#' \code{field} identifier (world configuration by realisation) used as the
+#' bootstrap cluster.
 #'
-#' @param skill data.frame from \code{coalition_skill}
-#' @param order character vector giving the order in which blocks enter
-#' @return named numeric vector of increments
+#' @param d A data frame as written by the benchmark runner, read with
+#'   \code{check.names = FALSE} so that \code{"v_COORD+EDF"} style names survive.
+#' @return The augmented data frame.
 #' @export
-sequential_blocks <- function(skill, order = BLOCKS) {
-  v <- stats::setNames(skill$skill, skill$coalition)
-  key <- function(S) if (length(S)) paste(sort(S), collapse = "+") else "BASE"
-  cur <- character(0)
-  out <- stats::setNames(numeric(length(order)), order)
-  for (b in order) {
-    out[[b]] <- v[[key(c(cur, b))]] - v[[key(cur)]]
-    cur <- c(cur, b)
-  }
-  out
+add_shapley <- function(d) {
+  d$field <- paste0(d$world_cfg, "_r", d$realisation)
+  sh <- t(apply(d, 1, function(r) shapley_row(as.list(sapply(r, function(v) suppressWarnings(as.numeric(v)))))))
+  for (b in BLOCKS) d[[paste0("phi_", b)]] <- sh[, b]
+  d$alg <- d[[skey(character(0))]] - d$GLM
+  d$total <- d[[skey(BLOCKS)]] - d$GLM
+  d$temp_added_last <- d[[skey(BLOCKS)]] - d[[skey(c("COORD", "EDF", "LAG"))]]
+  d$temp_marg_withNN0 <- d[[skey(c("COORD", "EDF", "LAG", "NN0", "TEMP"))]] -
+    d[[skey(c("COORD", "EDF", "LAG", "NN0"))]]
+  d$spatial <- d$phi_COORD + d$phi_EDF + d$phi_LAG
+  d
 }
 
-
-#' Placebo check for the temporal block
+#' Cluster bootstrap interval for a mean
 #'
-#' With a single timestep the temporal features are constant by construction
-#' and can carry no information, so any honest estimator must return
-#' approximately zero. The nested contrast fails this check; the isolated
-#' increment passes it.
+#' Resamples the independent field realisations (column \code{field}) with
+#' replacement \code{B} times and returns the mean with a 95 percent percentile
+#' interval. The point estimate is the dataset level mean.
 #'
-#' @param skill data.frame from \code{coalition_skill} fitted at one timestep
-#' @return list with the nested contrast and the isolated increment
+#' @param d Data frame with a \code{field} column.
+#' @param col Name of the column to summarise.
+#' @param B Bootstrap replicates.
+#' @param seed Seed.
+#' @return A named vector \code{value}, \code{ci_lo}, \code{ci_hi}.
 #' @export
-temporal_placebo <- function(skill) {
-  v <- stats::setNames(skill$skill, skill$coalition)
-  list(
-    nested_contrast = unname(v[["EDF+LAG+TEMP"]] - v[["COORD"]]),
-    isolated_increment = unname(v[["COORD+EDF+LAG+TEMP"]] - v[["COORD+EDF+LAG"]])
-  )
+boot_ci <- function(d, col, B = 2000, seed = 1) {
+  set.seed(seed)
+  m <- tapply(d[[col]], d$field, mean); G <- length(m)
+  draws <- replicate(B, mean(m[sample.int(G, G, replace = TRUE)]))
+  c(value = mean(d[[col]]), ci_lo = unname(stats::quantile(draws, 0.025)),
+    ci_hi = unname(stats::quantile(draws, 0.975)))
 }
 
-
-#' Assert that held-out responses cannot influence any predictor
+#' Decomposition table for a subset of datasets
 #'
-#' Implements the reviewer's invariance test: perturbing the test response must
-#' leave every training and query feature unchanged, while perturbing the
-#' training response must move the response-derived blocks (otherwise the test
-#' is vacuous).
-#'
-#' @param builder function(y_train, y_test) returning a named list with
-#'   \code{train} and \code{test} block lists
-#' @param y_train,y_test responses
-#' @return list with \code{no_leakage} and \code{non_vacuous}
+#' @param d Data frame from \code{\link{add_shapley}}.
+#' @param label Label for the subset.
+#' @return A data frame with one row per component (algorithmic, the four blocks,
+#'   spatial total, total gain), its bootstrap interval and share of the total.
 #' @export
-assert_no_leakage <- function(builder, y_train, y_test) {
-  base <- builder(y_train, y_test)
-  perturbed_test <- builder(y_train, sample(y_test) + 1)
-  same <- all(mapply(function(a, b) isTRUE(all.equal(a, b)),
-                     unlist(base, recursive = FALSE),
-                     unlist(perturbed_test, recursive = FALSE)))
-  perturbed_train <- builder(y_train + 1, y_test)
-  moved <- !isTRUE(all.equal(base$test$LAG, perturbed_train$test$LAG))
-  list(no_leakage = isTRUE(same), non_vacuous = isTRUE(moved))
-}
-
-
-#' Area under the ROC curve for a binary response
-#'
-#' @param obs binary observations
-#' @param pred predicted scores
-#' @export
-auc_binary <- function(obs, pred) {
-  obs <- as.numeric(as.character(obs))
-  r <- rank(pred)
-  n1 <- sum(obs == 1); n0 <- sum(obs == 0)
-  if (n1 == 0 || n0 == 0) return(NA_real_)
-  (sum(r[obs == 1]) - n1 * (n1 + 1) / 2) / (n1 * n0)
+decomp_table <- function(d, label) {
+  LAB <- c(COORD = "Coordinates", EDF = "Distance fields", LAG = "Spatial lags", TEMP = "Temporal")
+  tot <- mean(d$total)
+  comps <- c("Algorithmic flexibility" = "alg", stats::setNames(paste0("phi_", BLOCKS), LAB[BLOCKS]),
+             "Spatial total" = "spatial", "Total gain over GLM" = "total")
+  do.call(rbind, lapply(names(comps), function(nm) {
+    ci <- boot_ci(d, comps[[nm]])
+    data.frame(subset = label, component = nm, value = ci[["value"]], ci_lo = ci[["ci_lo"]],
+               ci_hi = ci[["ci_hi"]], share_pct = 100 * ci[["value"]] / tot,
+               n_datasets = nrow(d), n_fields = length(unique(d$field)))
+  }))
 }

@@ -4,23 +4,20 @@
 .RData
 .Ruserdata
 *.Rproj
-# targets
-_targets/
+*.Rcheck/
+marineSim_*.tar.gz
 # python
 __pycache__/
 *.pyc
-.venv/
-venv/
 # os
 .DS_Store
 
-# NOTE ON OUTPUTS
-# figures/*.png and results/*.{csv,json} are deliberately NOT ignored. They are the
-# artefacts the manuscript reports, so the archived release must contain them: a reader
-# should be able to verify every figure and number without re-running a simulation that
-# takes hours. Regenerating them is still a one-command operation (see README).
-#
-# Raw case-study data is excluded: it is third-party monitoring data and is not ours to
-# redistribute. See RELEASE.md, step 0.
+# Outputs are deliberately committed: results/*.csv and figures/*.png are what the
+# article reports, so the archived release must contain them. Shard files from a
+# parallel run are intermediates and are excluded.
+results/ablation_expanded_shard*.csv
+results/*.log
+
+# Raw case study data are third party monitoring data and are not redistributed.
 data/raw/
 *Bayesiandataset*

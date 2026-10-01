@@ -1,121 +1,107 @@
-#' Build a ground truth world for the simulation benchmark
+#' Ground truth ecosystem generator (Section 3.1)
 #'
-#' Constructs a spatially and temporally structured occurrence process on a
-#' continuous domain. Environmental covariates are deliberately rough (short
-#' correlation range) so that a learner cannot use them as an implicit location
-#' proxy; the smooth spatial signal lives in a separate latent field plus, in
-#' the non stationary case, a spatially varying covariate effect. A persistent
-#' temporal field with annual innovations introduces genuine temporal structure.
+#' Builds one simulated world: four standardised Matérn covariate fields
+#' (depth, substrate and wave, static, with ranges 45, 35 and 60 km; sea surface
+#' temperature as an AR(1) process in time with \eqn{\rho = 0.6} and spatially
+#' correlated innovations of range 45 km), a latent spatial field at the world's
+#' range with sd 2.55, a static persistent site effect (26 km, sd 1.30),
+#' optionally non stationary depth and SST coefficients perturbed by
+#' \eqn{0.20 \times} a 250 km field, and a habitat mask of structural zeros
+#' covering the lower quartile of a 120 km field. The linear predictor is
+#' \deqn{\eta_t = 0.10 + \beta_d z_d - 0.22 z_d^2 + 0.45 z_s - 0.30 z_w + 0.22 z_d z_w + \beta_T z_{T,t} + \xi + \pi,}
+#' with \eqn{\beta_d = -0.55} and \eqn{\beta_T = -0.45} in the stationary case.
+#' Occurrence is Bernoulli with probability \eqn{\mathrm{mask} \cdot \mathrm{logit}^{-1}(\eta_t)};
+#' abundance is Poisson with mean \eqn{\mathrm{mask} \cdot \exp(\log 3 + \eta_t / 2)}.
 #'
-#' @param world_id Integer world identifier (used to set the seed).
-#' @param nonstationary Logical; if TRUE the depth effect varies over space.
-#' @param spatial_range_km Correlation range of the latent spatial field.
-#' @param n_time Number of time points.
-#' @param grid_n Grid resolution for the underlying fields.
-#' @param extent_km Domain side length in kilometres.
-#' @param base_seed Integer seed offset.
+#' Fields are stored as \code{GRID} by \code{GRID} matrices. Cell index \code{i}
+#' in \code{1:GRID^2} is column major: \code{row = (i - 1) \%\% GRID + 1},
+#' \code{col = (i - 1) \%/\% GRID + 1}, and the cell centre is at
+#' \code{x = (col - 0.5) * CELL_KM}, \code{y = (row - 0.5) * CELL_KM}.
 #'
-#' @return A list with the truth surfaces and a function \code{sample_sites}
-#'   that draws observations under a chosen design, sample size and detection
-#'   probability.
+#' @param stationary Logical; \code{FALSE} gives spatially varying depth and SST coefficients.
+#' @param range_km Correlation range of the latent spatial field (30, 80 or 200 in the article).
+#' @param n_time Number of timesteps to simulate.
+#' @param seed Integer seed; see \code{\link{world_grid}} for the article's seeds.
+#' @return A list with the covariate fields (\code{depth}, \code{subst}, \code{wave},
+#'   \code{sst} as a list over time), the truth surfaces per timestep (\code{eta},
+#'   \code{p}, \code{y}, \code{mu}, \code{ycount}), the coefficient fields
+#'   (\code{b_depth}, \code{b_sst}) and the latent components (\code{spatial_re},
+#'   \code{persist}).
 #' @export
-make_world <- function(world_id = 0L, nonstationary = FALSE,
-                       spatial_range_km = 80, n_time = 5L,
-                       grid_n = 64L, extent_km = 400,
-                       base_seed = 20260601L) {
-  seed <- base_seed + world_id
-  set.seed(seed)
-
-  # rough environmental covariates (short ranges -> not a location proxy)
-  depth <- matern_grf(grid_n, 45, extent_km, sigma = 1, seed = seed + 11)$field
-  subst <- matern_grf(grid_n, 35, extent_km, sigma = 1, seed = seed + 12)$field
-  wave  <- matern_grf(grid_n, 60, extent_km, sigma = 1, seed = seed + 13)$field
-  sst   <- matern_grf(grid_n, 45, extent_km, sigma = 1, seed = seed + 14)$field
-
-  # smooth latent spatial field (the structure spatial methods can exploit)
-  re_field <- matern_grf(grid_n, spatial_range_km, extent_km,
-                         sigma = 2.55, seed = seed + 21)$field
-
-  # spatially varying coefficient for the non stationary regime
-  svc <- if (nonstationary) {
-    0.9 * matern_grf(grid_n, spatial_range_km, extent_km, sigma = 1,
-                     seed = seed + 22)$field
+make_world <- function(stationary, range_km, n_time = 5L, seed = 0L) {
+  set.seed(seed); g <- GRID
+  depth <- matern_grf(g, 45 / CELL_KM); subst <- matern_grf(g, 35 / CELL_KM)
+  wave  <- matern_grf(g, 60 / CELL_KM)
+  sst <- vector("list", n_time); sst[[1]] <- matern_grf(g, 45 / CELL_KM); rho <- 0.6
+  if (n_time > 1) for (t in 2:n_time)
+    sst[[t]] <- rho * sst[[t - 1]] + sqrt(1 - rho^2) * matern_grf(g, 45 / CELL_KM)
+  spatial_re <- 2.55 * matern_grf(g, range_km / CELL_KM)
+  persist <- 1.30 * matern_grf(g, 26 / CELL_KM)          # static across time
+  if (stationary) {
+    b_depth <- matrix(-0.55, g, g); b_sst <- matrix(-0.45, g, g)
   } else {
-    matrix(0, grid_n, grid_n)
+    b_depth <- -0.55 + 0.20 * matern_grf(g, 250 / CELL_KM)
+    b_sst   <- -0.45 + 0.20 * matern_grf(g, 250 / CELL_KM)
   }
-
-  # persistent temporal fields with annual innovations
-  persist_range <- 26
-  t_fields <- vector("list", n_time)
-  prev <- matern_grf(grid_n, persist_range, extent_km, sigma = 1.30,
-                     seed = seed + 31)$field
-  for (tt in seq_len(n_time)) {
-    innov <- matern_grf(grid_n, persist_range, extent_km, sigma = 1.30,
-                        seed = seed + 40 + tt)$field
-    prev <- 0.75 * prev + sqrt(1 - 0.75^2) * innov
-    t_fields[[tt]] <- prev
+  hab <- matern_grf(g, 120 / CELL_KM)
+  struct <- (hab > stats::quantile(hab, 0.25)) * 1
+  eta <- p <- y <- mu <- ycount <- vector("list", n_time)
+  for (t in seq_len(n_time)) {
+    eta[[t]] <- 0.10 + b_depth * depth - 0.22 * depth^2 + 0.45 * subst - 0.30 * wave +
+      0.22 * depth * wave + b_sst * sst[[t]] + spatial_re + persist
+    p[[t]] <- struct * stats::plogis(eta[[t]])
+    y[[t]] <- matrix(stats::rbinom(g * g, 1, as.vector(p[[t]])), g, g)
+    mu[[t]] <- struct * exp(C0_COUNT + ETA_SCALE * eta[[t]])
+    ycount[[t]] <- matrix(stats::rpois(g * g, as.vector(mu[[t]])), g, g)
   }
-
-  b <- list(b0 = 0.10, depth = -0.55, depth2 = -0.22, subst = 0.45,
-            wave = -0.30, sst = -0.45, int = 0.22)
-
-  linpred_grid <- function(tt) {
-    eff_depth <- b$depth + svc
-    lp <- b$b0 + eff_depth * depth + b$depth2 * depth^2 + b$subst * subst +
-      b$wave * wave + b$sst * sst + b$int * (depth * wave) +
-      re_field + t_fields[[tt]]
-    lp
-  }
-
-  grf_like <- list(x = seq(0, extent_km, length.out = grid_n),
-                   y = seq(0, extent_km, length.out = grid_n))
-
-  sample_sites <- function(n = 100L, design = c("random", "clustered", "stratified"),
-                           detection = 1.0, times = NULL) {
-    design <- match.arg(design)
-    if (is.null(times)) times <- seq_len(n_time)
-    co <- draw_coords(n, design, extent_km)
-    rows <- list(); r <- 1
-    for (tt in times) {
-      lpg <- list(field = linpred_grid(tt), x = grf_like$x, y = grf_like$y)
-      lp <- sample_field(lpg, co$x, co$y)
-      p <- 1 / (1 + exp(-lp))
-      y_true <- stats::rbinom(length(p), 1, p)
-      y_obs <- ifelse(y_true == 1 & stats::runif(length(p)) > detection, 0, y_true)
-      gv <- function(f) sample_field(list(field = f, x = grf_like$x, y = grf_like$y),
-                                     co$x, co$y)
-      rows[[r]] <- data.frame(x = co$x, y = co$y, time = tt,
-                              depth = gv(depth), subst = gv(subst),
-                              wave = gv(wave), sst = gv(sst),
-                              y = y_obs)
-      r <- r + 1
-    }
-    do.call(rbind, rows)
-  }
-
-  list(seed = seed, nonstationary = nonstationary,
-       spatial_range_km = spatial_range_km, n_time = n_time,
-       extent_km = extent_km, sample_sites = sample_sites)
+  list(g = g, n_time = n_time, depth = depth, subst = subst, wave = wave, sst = sst,
+       p = p, y = y, mu = mu, ycount = ycount, eta = eta, b_sst = b_sst, b_depth = b_depth,
+       persist = persist, spatial_re = spatial_re)
 }
 
-#' Draw site coordinates under a sampling design
-#' @keywords internal
-draw_coords <- function(n, design, extent_km) {
-  if (design == "random") {
-    x <- stats::runif(n, 0, extent_km); y <- stats::runif(n, 0, extent_km)
-  } else if (design == "clustered") {
-    nc <- max(2, round(n / 12))
-    cx <- stats::runif(nc, 0, extent_km); cy <- stats::runif(nc, 0, extent_km)
-    k <- sample(seq_len(nc), n, replace = TRUE)
-    x <- pmin(pmax(cx[k] + stats::rnorm(n, 0, extent_km * 0.04), 0), extent_km)
-    y <- pmin(pmax(cy[k] + stats::rnorm(n, 0, extent_km * 0.04), 0), extent_km)
-  } else { # stratified over a coarse grid
-    g <- ceiling(sqrt(n)); step <- extent_km / g
-    gx <- rep(seq_len(g), times = g); gy <- rep(seq_len(g), each = g)
-    sel <- sample(seq_along(gx), n)
-    x <- (gx[sel] - 0.5) * step + stats::runif(n, -step / 2, step / 2)
-    y <- (gy[sel] - 0.5) * step + stats::runif(n, -step / 2, step / 2)
-    x <- pmin(pmax(x, 0), extent_km); y <- pmin(pmax(y, 0), extent_km)
+#' Cell centres in kilometres
+#' @param idx Integer cell indices in \code{1:GRID^2}.
+#' @return A two column matrix of \code{x}, \code{y} coordinates (km).
+#' @export
+cell_xy <- function(idx) {
+  g <- GRID; r <- (idx - 1) %% g + 1; cc <- (idx - 1) %/% g + 1
+  cbind(x = (cc - 0.5) * CELL_KM, y = (r - 0.5) * CELL_KM)
+}
+
+#' Cell index from row and column, clamped to the grid
+#' @param r,cc Integer row and column vectors.
+#' @return Integer cell indices.
+#' @export
+cell_idx <- function(r, cc) (pmin(pmax(cc, 1), GRID) - 1) * GRID + pmin(pmax(r, 1), GRID)
+
+#' Covariate matrix at a set of cells and a timestep
+#' @param w A world from \code{\link{make_world}}.
+#' @param idx Integer cell indices.
+#' @param t Timestep.
+#' @return A matrix with columns \code{depth}, \code{subst}, \code{wave}, \code{sst}.
+#' @export
+covariates <- function(w, idx, t)
+  cbind(depth = w$depth[idx], subst = w$subst[idx], wave = w$wave[idx], sst = w$sst[[t]][idx])
+
+#' The six world configurations of the article and their seeds
+#'
+#' Two stationarity regimes crossed with three latent ranges (30, 80, 200 km).
+#' The world seed is \code{BASE_SEED + 1000 * realisation + world_id}, where
+#' \code{world_id} runs 0 to 5 in the order stationary 30/80/200, then non
+#' stationary 30/80/200.
+#'
+#' @param realisations Integer vector of field realisation indices (0 to 5 in the article).
+#' @return A list of configuration lists with elements \code{wid}, \code{cfg},
+#'   \code{real}, \code{stat}, \code{range_km}, \code{seed}.
+#' @export
+world_grid <- function(realisations) {
+  out <- list(); wid <- 0L
+  for (stat in c(TRUE, FALSE)) for (rng_km in c(30, 80, 200)) {
+    cfg <- sprintf("%s_r%d", if (stat) "stat" else "nonstat", rng_km)
+    for (r in realisations)
+      out[[length(out) + 1]] <- list(wid = wid, cfg = cfg, real = r, stat = stat,
+                                     range_km = rng_km, seed = BASE_SEED + 1000L * r + wid)
+    wid <- wid + 1L
   }
-  list(x = x, y = y)
+  out
 }

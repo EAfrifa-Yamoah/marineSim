@@ -1,50 +1,48 @@
-# marineSim — analysis pipeline
-#
-# The core factorial benchmark takes hours; everything else runs in minutes.
-# Case-study targets need the DBCA data (see README, Data availability).
+# marineSim — reproduce the article from the repository root.
+# The ablation grid takes hours; everything else runs in minutes to an hour.
+RS   := Rscript
+PY   := python3
+A    := analysis
+F    := figures/scripts
+DATA ?= data/raw/Bayesiandataset_2025_final.csv
 
-PY      := python3
-PYDIR   := python
-DATA    ?= data/raw/Bayesiandataset_2025_final.csv
-
-.PHONY: all benchmark ablation verify case figures clean help
+.PHONY: help install check verify benchmark decompose gam core si s6 case figures all
 
 help:
 	@grep -E '^[a-z]+:.*?##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/'
 
-all: ablation verify case figures  ## everything except the core benchmark
+install:  ## build, check and install the R package
+	R CMD build marineSim && _R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-manual marineSim_*.tar.gz && R CMD INSTALL marineSim_*.tar.gz
 
-benchmark:  ## core factorial grid (hours)
-	cd $(PYDIR) && $(PY) benchmark.py
-	cd $(PYDIR) && $(PY) aux_runs.py
-	cd $(PYDIR) && $(PY) aggregate.py
+verify:  ## engine mechanism checks (run first)
+	cd $(A) && $(RS) 00_verify_engine.R
 
-ablation:  ## feature-block coalitions and the Shapley decomposition
-	cd $(PYDIR) && $(PY) ablation.py 3 0 3 c1
-	cd $(PYDIR) && $(PY) ablation.py 3 3 6 c2
-	cd $(PYDIR) && $(PY) ablation.py 3 6 9 c3
-	cd $(PYDIR) && $(PY) ablation.py 3 9 12 c4
-	cd $(PYDIR) && $(PY) ablation.py 3 12 15 c5
-	cd $(PYDIR) && $(PY) ablation.py 3 15 18 c6
-	cd $(PYDIR) && $(PY) -c "import pandas as pd, glob; \
-	  pd.concat([pd.read_csv(f) for f in sorted(glob.glob('../results/ablation_rows_c*.csv'))], \
-	  ignore_index=True).to_csv('../results/ablation_rows.csv', index=False)"
-	cd $(PYDIR) && $(PY) decompose.py
+benchmark:  ## expanded ablation grid, one core, resumable (~4-5 h)
+	cd $(A) && $(RS) 01_ablation_expanded.R
 
-verify:  ## leakage invariance, GP scaling, prediction-band coverage
-	cd $(PYDIR) && $(PY) verify.py
+decompose:  ## Shapley tables T1-T5
+	cd $(A) && $(RS) 02_decompose.R
 
-case: $(DATA)  ## case study: LORO, CV regimes, rolling origin, intervals
-	cd $(PYDIR) && $(PY) case_study_corrected.py
-	cd $(PYDIR) && $(PY) case_study_corrected2.py
+gam:  ## spatial GAM on Stage A datasets (~1 h)
+	cd $(A) && $(RS) 03_gam_core.R
+
+core:  ## five method core benchmark table (Figure 3, Table 2)
+	cd $(A) && $(RS) 04_core_benchmark_table.R
+
+si:  ## S2-S5 data and S6 pooled stRF
+	cd $(A) && $(RS) 05_si_figures_data.R && $(RS) 07_s6_pooled.R
+
+s6:  ## sdmTMB comparator (needs sdmTMB; ~2 h)
+	cd $(A) && $(RS) 06_s6_sdmtmb.R
+
+case: $(DATA)  ## case study (needs the monitoring data)
+	cd $(A) && $(RS) 08_case_study.R
 
 $(DATA):
-	@echo "Missing $(DATA)."
-	@echo "Case-study data are not redistributed; see README, Data availability."
-	@exit 1
+	@echo "Missing $(DATA). Case study data are not redistributed; see README, Data availability."; exit 1
 
-figures:  ## regenerate figures from stored results
-	cd $(PYDIR) && $(PY) render_figs.py
+figures:  ## draw all figures from results/
+	cd $(F) && $(PY) make_figures_2_4_5.py && $(PY) make_figure_3.py && $(PY) make_figures_S2_S3_S4.py \
+	  && $(PY) make_figure_S8.py && $(PY) make_figure_S1.py && $(PY) make_figures_case.py
 
-clean:  ## remove intermediate ablation chunks
-	rm -f results/ablation_rows_c*.csv
+all: verify benchmark decompose gam core si figures  ## everything except sdmTMB and the case study
