@@ -22,7 +22,7 @@ options(width = 100)
 
 `marineSim` is the simulation engine behind the article *Spatio-temporal random
 forests with adaptive local features for marine species distribution modelling
-under data limitation* (Afrifa-Yamoah, Fouedjio, Mueller, McMahon and Hyndes,
+under data limitation* (Afrifa-Yamoah, Fouedjio, Arya, Awuah-Mensah, Siqueira and Mueller,
 submitted to *Methods in Ecology and Evolution*). The package generates synthetic
 marine ecosystems, draws survey data from them under three sampling designs,
 engineers the four feature blocks of the spatio-temporal random forest (stRF),
