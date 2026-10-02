@@ -25,18 +25,23 @@ authors:
     given-names: Francky
     affiliation: "Edith Cowan University"
     # TODO: add ORCID if available
-  - family-names: Mueller
+- family-names: Arya
+    given-names: Emet
+    affiliation: "Edith Cowan University"
+    # TODO: add ORCID if available
+  - family-names: Awuah-Mensah
+    given-names: Yaw K.
+    affiliation: "Edith Cowan University"
+    # TODO: add ORCID if available
+- family-names: Siqueira
+    given-names: Alexandre
+    affiliation: "Edith Cowan University"
+    # TODO: add ORCID if available
+- family-names: Mueller
     given-names: Ute
     affiliation: "Edith Cowan University"
     # TODO: add ORCID if available
-  - family-names: McMahon
-    given-names: Kathryn
-    affiliation: "Edith Cowan University"
-    # TODO: add ORCID if available
-  - family-names: Hyndes
-    given-names: Glenn A.
-    affiliation: "Edith Cowan University"
-    # TODO: add ORCID if available
+  
 
 keywords:
   - species distribution model
@@ -56,12 +61,14 @@ preferred-citation:
       orcid: "https://orcid.org/0000-0003-1741-9249"
     - family-names: Fouedjio
       given-names: Francky
+    - family-names: Arya
+      given-names: Emet
+    - family-names: Awuah-Mensah
+      given-names: Yaw K.
+    - family-names: Siqueira
+      given-names: Alexandre
     - family-names: Mueller
       given-names: Ute
-    - family-names: McMahon
-      given-names: Kathryn
-    - family-names: Hyndes
-      given-names: Glenn A.
   journal: "Methods in Ecology and Evolution"
   year: 2026
   # TODO on acceptance: add volume, issue, pages and the article DOI
