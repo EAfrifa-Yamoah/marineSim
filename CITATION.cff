@@ -25,7 +25,7 @@ authors:
     given-names: Francky
     affiliation: "Edith Cowan University"
     # TODO: add ORCID if available
-- family-names: Arya
+  - family-names: Arya
     given-names: Emet
     affiliation: "Edith Cowan University"
     # TODO: add ORCID if available
@@ -33,15 +33,14 @@ authors:
     given-names: Yaw K.
     affiliation: "Edith Cowan University"
     # TODO: add ORCID if available
-- family-names: Siqueira
+  - family-names: Siqueira
     given-names: Alexandre
     affiliation: "Edith Cowan University"
     # TODO: add ORCID if available
-- family-names: Mueller
+  - family-names: Mueller
     given-names: Ute
     affiliation: "Edith Cowan University"
     # TODO: add ORCID if available
-  
 
 keywords:
   - species distribution model
