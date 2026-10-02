@@ -1,4 +1,4 @@
-# marineSim 1.0.0 (2026-10-01)
+# marineSim 1.0.0 (2026-10-05)
 
 Release accompanying the submitted article. R is the sole computational engine.
 The earlier tags v2.0.0 and v2.0.1 belong to the July revision (whose DESCRIPTION
