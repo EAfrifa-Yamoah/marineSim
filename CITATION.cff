@@ -10,7 +10,7 @@ abstract: >-
   and a Posidonia sinuosa seagrass case study in Western Australia.
 type: software
 version: 1.0.0
-date-released: 2026-10-05
+date-released: 2026-10-02
 license: MIT
 repository-code: "https://github.com/EAfrifa-Yamoah/marineSim"
 
