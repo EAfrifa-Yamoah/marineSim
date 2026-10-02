@@ -38,10 +38,11 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Francky Fouedjio
-  \item Ute Mueller
-  \item Kathryn McMahon
-  \item Glenn A. Hyndes
+  \item Francky Fouedjio (\href{https://orcid.org/0000-0002-7440-6498}{ORCID})
+  \item Emet Arya (\href{https://orcid.org/0000-0002-4038-4200}{ORCID})
+  \item Yaw Kwaafo Awuah-Mensah (\href{https://orcid.org/0009-0002-7893-0948}{ORCID})
+  \item Alexandre Siqueira (\href{https://orcid.org/0000-0001-7970-4024}{ORCID})
+  \item Ute Mueller (\href{https://orcid.org/0000-0002-8670-2120}{ORCID})
 }
 
 }
