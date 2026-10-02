@@ -1,6 +1,6 @@
 # marineSim — spatio-temporal random forests for marine SDM under data limitation
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23103920.svg)](https://doi.org/10.5281/zenodo.23103920)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23103919.svg)](https://doi.org/10.5281/zenodo.23103919)
 
 Code, results and figures behind the article
 
@@ -174,8 +174,8 @@ the data custodians on request (see the article's Data Availability Statement).
 ## Citation
 
 See `CITATION.cff`. Please cite both the article and the archived software release.
-Version 1.0.0 is archived on Zenodo at https://doi.org/10.5281/zenodo.23103919 (version DOI).
-The concept DOI https://doi.org/10.5281/zenodo.23103920 always resolves to the latest version.
+Version 1.0.0 is archived on Zenodo at https://doi.org/10.5281/zenodo.23103920 (version DOI).
+The concept DOI https://doi.org/10.5281/zenodo.23103919 always resolves to the latest version.
 
 ## Licence
 
