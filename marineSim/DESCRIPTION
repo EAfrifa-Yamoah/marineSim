@@ -8,7 +8,7 @@ Authors@R: c(
     person("Emet", "Arya", role = "aut"),
     person("Yaw Kwaafo", "Awuah-Mensah", role = "aut"),
     person("Alexandre", "Siqueira", role = "aut"),
-    person("Ute", "Mueller", role = "aut")
+    person("Ute", "Mueller", role = "aut"))
 Description: The simulation engine behind the article "Spatio-temporal random
     forests with adaptive local features for marine species distribution
     modelling under data limitation". Provides the Matern Gaussian random field
