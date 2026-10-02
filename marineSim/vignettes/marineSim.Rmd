@@ -1,0 +1,602 @@
+---
+title: "marineSim: a tutorial"
+author: "Ebenezer Afrifa-Yamoah"
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{marineSim: a tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 4.2,
+                      fig.align = "center", dpi = 96)
+options(width = 100)
+```
+
+## 1. Scope
+
+`marineSim` is the simulation engine behind the article *Spatio-temporal random
+forests with adaptive local features for marine species distribution modelling
+under data limitation* (Afrifa-Yamoah, Fouedjio, Mueller, McMahon and Hyndes,
+submitted to *Methods in Ecology and Evolution*). The package generates synthetic
+marine ecosystems, draws survey data from them under three sampling designs,
+engineers the four feature blocks of the spatio-temporal random forest (stRF),
+fits and scores the competing models, and attributes the predictive gain of stRF
+to its components by an exact Shapley decomposition with a cluster bootstrap.
+
+This tutorial walks through that pipeline on a small scale. It is written so that
+every code chunk runs in a few seconds to a couple of minutes on one core, and so
+that each object can be inspected along the way. The full benchmark of the
+article (3,779 datasets) is driven by the scripts in the repository's
+`analysis/` directory; Section 10 explains how the pieces shown here map onto
+those scripts and how a single archived result can be recomputed exactly.
+
+Section numbers in the text refer to the article. Numerical values printed in
+this document come from the small examples below and are not the article's
+estimates; the comparison between the two is discussed where relevant.
+
+```{r load}
+library(marineSim)
+```
+
+## 2. Installation
+
+The package depends only on R (4.1 or later) and `ranger`. From the repository
+root:
+
+```r
+install.packages("ranger")
+install.packages("marineSim", repos = NULL, type = "source")
+```
+
+or directly from GitHub, where the package lives in the `marineSim/` subdirectory:
+
+```r
+remotes::install_github("EAfrifa-Yamoah/marineSim", subdir = "marineSim")
+```
+
+Forest fits are seeded and single threaded (`num.threads = 1`), so a given seed
+gives the same score on the same `ranger` version. A different `ranger` version
+may change the forest's random stream and therefore the third or fourth decimal
+of a score; the mechanisms and orderings shown here do not depend on it.
+
+## 3. The simulated ecosystem
+
+### 3.1 Fixed design constants
+
+The engine works on a square grid of `GRID` by `GRID` cells covering
+`EXTENT_KM` kilometres a side. The constants are exported so that scripts can
+refer to them by name. They are part of the design: changing any of them changes
+the random stream and with it every reported number.
+
+```{r constants}
+c(GRID = GRID, EXTENT_KM = EXTENT_KM, CELL_KM = CELL_KM, N_TEST = N_TEST,
+  RF_TREES = RF_TREES, N_ANCHORS = N_ANCHORS)
+RADII_KM
+BLOCKS
+```
+
+### 3.2 Generating a world
+
+`make_world()` builds one ground truth ecosystem (Section 3.1). Four standardised
+Matérn covariate fields are simulated by spectral synthesis: depth, substrate and
+wave exposure are static, and sea surface temperature (SST) follows an AR(1)
+process in time. A latent spatial field at the world's correlation range, a
+persistent site effect and a habitat mask of structural zeros complete the
+linear predictor. Occurrence is Bernoulli and abundance is Poisson, both
+multiplied by the mask.
+
+The two arguments that define a world configuration in the article are
+`stationary` (whether the depth and SST coefficients vary in space) and
+`range_km` (the correlation range of the latent field: 30, 80 or 200 km).
+
+```{r world}
+w <- make_world(stationary = FALSE, range_km = 80, n_time = 5, seed = 11)
+str(w, max.level = 1, give.attr = FALSE)
+```
+
+Static fields are `GRID` by `GRID` matrices; quantities that change through time
+(`sst`, `eta`, `p`, `y`, `mu`, `ycount`) are lists with one matrix per timestep.
+The helper below draws a field with cell centres on the kilometre axes. The
+matrix is transposed because `image()` expects its first index to run along `x`,
+whereas the engine stores rows along `y`.
+
+```{r show-field, fig.width = 9, fig.height = 3.4}
+axis_km <- seq(CELL_KM / 2, EXTENT_KM - CELL_KM / 2, by = CELL_KM)
+show_field <- function(m, main, col = hcl.colors(24, "viridis")) {
+  image(axis_km, axis_km, t(m), col = col, main = main, xlab = "x (km)", ylab = "y (km)",
+        useRaster = TRUE)
+}
+op <- par(mfrow = c(1, 3), mar = c(4, 4, 2.5, 1), pty = "s")
+show_field(w$depth, "Depth (standardised)")
+show_field(w$eta[[5]], "Linear predictor, t = 5")
+show_field(w$p[[5]], "Occurrence probability, t = 5")
+par(op)
+```
+
+The habitat mask is visible as the flat zero region of the probability surface.
+Its extent is one quarter of the domain by construction:
+
+```{r mask}
+mean(w$mu[[1]] == 0)
+```
+
+Only SST changes through time, so the difference between the linear predictor at
+two timesteps equals the SST coefficient field times the SST change. This
+identity is one of the mechanism checks in the package's test suite.
+
+```{r sst-identity}
+resid <- (w$eta[[5]] - w$eta[[1]]) - w$b_sst * (w$sst[[5]] - w$sst[[1]])
+max(abs(resid))
+```
+
+### 3.3 Cell indexing and covariates
+
+Cells are indexed from 1 to `GRID^2` in column major order. `cell_xy()` returns
+the centre of each cell in kilometres and `covariates()` reads the four
+covariates at a set of cells and a timestep.
+
+```{r cells}
+idx <- c(1, 50, 51, 2500)
+cbind(idx, cell_xy(idx))
+head(covariates(w, idx, t = 5), 2)
+```
+
+### 3.4 The article's six configurations
+
+`world_grid()` enumerates the two stationarity regimes crossed with the three
+latent ranges, and derives a seed for every field realisation. The benchmark uses
+realisations 0 to 5, giving 36 independent worlds. The first configuration of
+realisation 0 is shown below.
+
+```{r world-grid}
+grid <- world_grid(realisations = 0:1)
+length(grid)
+str(grid[[1]])
+sapply(grid, function(g) g$cfg)
+```
+
+## 4. Survey designs
+
+`sample_sites()` draws `n` distinct cells under one of three designs (Section
+3.2). Random sampling is simple random sampling of cells. Clustered sampling
+places three Gaussian clusters whose centres are uniform on the central 70
+percent of each axis. Stratified sampling partitions the grid into equal blocks
+and draws one cell in each of `n` blocks chosen without replacement.
+
+```{r designs, fig.width = 9, fig.height = 3.4}
+set.seed(3)
+designs <- c("random", "clustered", "stratified")
+sites <- lapply(designs, function(d) cell_xy(sample_sites(100, d)))
+op <- par(mfrow = c(1, 3), mar = c(4, 4, 2.5, 1), pty = "s")
+for (k in 1:3) {
+  show_field(w$p[[5]], paste0(designs[k], " (n = 100)"), col = hcl.colors(24, "Grays", rev = TRUE))
+  points(sites[[k]], pch = 21, bg = "#D55E00", cex = 0.9)
+}
+par(op)
+```
+
+The clustered design is the data limited regime of most interest in the article:
+it leaves large parts of the domain unobserved, which is where spatial features
+built from the training sites can either help or extrapolate badly.
+
+## 5. From a world to a benchmark dataset
+
+### 5.1 Building a dataset
+
+`build_dataset()` draws the sites, observes the response at every timestep,
+holds out `N_TEST` cells that are not sites, and constructs the four feature
+blocks at the final timestep for both the training sites and the test cells
+(Sections 3.2 and 3.3).
+
+```{r dataset}
+ds <- build_dataset(w, n = 100, n_time = 5, design = "clustered", seed = 7)
+names(ds)
+c(train = length(ds$y_tr), test = length(ds$y_te), positives_train = sum(ds$y_tr))
+sapply(ds$btr, ncol)
+```
+
+The blocks are stored as two parallel lists, `btr` for the training sites and
+`bte` for the test cells, with one matrix per block:
+
+| Block | Columns | Content |
+|---|---|---|
+| `COORD` | 2 | cell centre coordinates in km |
+| `EDF` | up to `N_ANCHORS` | distance to k-means anchors of the training sites |
+| `LAG` | `length(RADII_KM)` | mean training response within 25, 75 and 150 km |
+| `TEMP` | 2 | previous timestep response and site history mean, read at the nearest training site |
+| `NN0` | 1 | same timestep response of the nearest training site (a control, not part of stRF) |
+
+Every block is a function of the training sites and the training responses
+only. The test responses `y_te` are never an argument to any block builder.
+Perturbing a training response moves the test lag features, which shows that the
+guard is not vacuous:
+
+```{r leakage}
+lag_a <- spatial_lags(ds$btr$COORD, ds$y_tr, ds$bte$COORD, is_train = FALSE)
+y_pert <- ds$y_tr; y_pert[1] <- 1 - y_pert[1]
+lag_b <- spatial_lags(ds$btr$COORD, y_pert, ds$bte$COORD, is_train = FALSE)
+sum(lag_a != lag_b)
+"y_te" %in% c(names(formals(spatial_lags)), names(formals(nearest_train)), names(formals(edf)))
+```
+
+At the training sites the spatial lags are computed leave one out, so a site's
+own response never enters its lag features:
+
+```{r lag-loo}
+lags <- ds$btr$LAG; colnames(lags) <- paste0("lag_", RADII_KM, "km")
+head(cbind(y = ds$y_tr, lags), 4)
+```
+
+### 5.2 The temporal placebo
+
+With a single timestep there is no history to read, and the temporal block is
+filled with the training mean at every row. This is the placebo condition of the
+article: a block that carries no information must receive a Shapley value close
+to zero, and any non zero attribution to it measures the noise floor of the
+decomposition.
+
+```{r placebo}
+ds1 <- build_dataset(w, n = 100, n_time = 1, design = "clustered", seed = 7)
+unique(as.vector(ds1$btr$TEMP))
+```
+
+### 5.3 Imperfect detection and abundance
+
+Two extensions of the benchmark are switches on the same function. A detection
+probability below one thins the positives at the training sites only; the test
+truth is untouched. The abundance response replaces occurrence with Poisson
+counts.
+
+```{r extensions}
+ds_thin <- build_dataset(w, 100, 5, "clustered", seed = 7, detection = 0.7)
+c(full = sum(ds$y_tr), thinned = sum(ds_thin$y_tr), same_sites = identical(ds_thin$site, ds$site))
+ds_cnt <- build_dataset(w, 100, 5, "clustered", seed = 7, response = "abundance")
+summary(ds_cnt$y_tr)
+```
+
+`build_dataset()` returns `NULL` when the training or test response is
+degenerate (all zeros or all ones), which can happen at the smallest sample
+sizes. The benchmark runner skips such datasets.
+
+## 6. Fitting and scoring
+
+`score()` fits the forest backbone of the article on the four covariates plus a
+coalition of blocks and returns a single held out score: the AUC for occurrence,
+or the Spearman correlation with the held out counts for abundance. `glm_score()`
+fits the covariate only GLM baseline. Three coalitions have names in the article:
+
+| Coalition | Model |
+|---|---|
+| `character(0)` | standard random forest on covariates |
+| `"COORD"` | spatial random forest |
+| `BLOCKS` | stRF |
+
+```{r scores}
+c(GLM = glm_score(ds),
+  RF = score(ds, character(0), seed = 7),
+  spatial_RF = score(ds, "COORD", seed = 7),
+  stRF = score(ds, BLOCKS, seed = 7))
+```
+
+On this dataset the covariate only forest scores below the GLM. The algorithmic
+term of the decomposition is exactly that difference, and at small sample sizes
+it is often negative for a single dataset; only its average over many datasets
+is interpretable.
+
+The forest is a probability forest with `RF_TREES` trees, minimum node size 1
+and `mtry = floor(sqrt(p))`. For abundance the response is `log1p(count)` and
+`mtry = p`. The AUC is computed by the rank statistic:
+
+```{r auc}
+auc(c(0, 0, 1, 1), c(0.1, 0.4, 0.35, 0.8))
+```
+
+## 7. Coalitions and the exact Shapley decomposition
+
+The attribution of Section 3.4 asks how much of the gain of stRF over the
+covariate only forest is due to each block. Because blocks interact (distance
+fields and coordinates both encode location), the answer is not the sum of
+single block gains. The article uses the exact Shapley value over the 16
+coalitions of `BLOCKS`, which requires fitting every coalition.
+
+`required_subsets()` lists the 16 coalitions plus four control coalitions that
+include `NN0`; `skey()` gives the column name under which each score is stored.
+
+```{r subsets}
+subs <- required_subsets()
+length(subs)
+sapply(subs, skey)
+```
+
+Fitting all twenty on one dataset takes a few seconds:
+
+```{r one-row}
+row <- as.list(sapply(subs, function(S) score(ds, S, seed = 7)))
+names(row) <- sapply(subs, skey)
+phi <- shapley_row(row)
+round(phi, 4)
+```
+
+The Shapley values satisfy the efficiency property: they sum to the gain of the
+full coalition over the empty one. This holds exactly, which is a useful check
+whenever the decomposition code is modified.
+
+```{r efficiency}
+c(sum_phi = sum(phi), full_minus_base = row[[skey(BLOCKS)]] - row[[skey(character(0))]])
+```
+
+On this one clustered dataset the distance field block receives the largest
+share. A single dataset is, however, a single draw of sites and of forest
+randomness. The article's claims rest on averages over many datasets and on
+intervals that respect the dependence between datasets drawn from the same
+world.
+
+## 8. A small benchmark with the cluster bootstrap
+
+The chunk below is a reduced version of `analysis/01_ablation_expanded.R`. It
+takes two world configurations (stationary and non stationary at 80 km), three
+field realisations of each, two designs and two timestep spans, at a single
+sample size. Each dataset yields one row with the GLM score and the twenty
+coalition scores, in exactly the format the runner writes to
+`results/ablation_expanded.csv`. The seed of every dataset is a deterministic
+function of its description through `dataset_seed()`, so a row can be recomputed
+in isolation.
+
+```{r small-benchmark, cache = FALSE}
+run_small_benchmark <- function(cfgs, realisations, designs, n, timesteps) {
+  grid <- Filter(function(g) g$cfg %in% cfgs, world_grid(realisations))
+  out <- list()
+  for (wg in grid) {
+    w <- make_world(wg$stat, wg$range_km, n_time = max(timesteps), seed = wg$seed)
+    for (di in seq_along(designs)) for (nt in timesteps) {
+      dseed <- dataset_seed(wg$seed, n, nt, di)
+      d <- build_dataset(w, n, nt, designs[di], dseed)
+      if (is.null(d)) next
+      rec <- data.frame(design = designs[di], world_cfg = wg$cfg, realisation = wg$real,
+                        n = n, n_time = nt, GLM = glm_score(d), stringsAsFactors = FALSE)
+      for (S in subs) rec[[skey(S)]] <- score(d, S, seed = dseed %% 10000L)
+      out[[length(out) + 1]] <- rec
+    }
+  }
+  do.call(rbind, out)
+}
+t0 <- Sys.time()
+bench <- run_small_benchmark(cfgs = c("stat_r80", "nonstat_r80"), realisations = 0:2,
+                             designs = c("random", "clustered"), n = 100, timesteps = c(1, 5))
+c(datasets = nrow(bench), columns = ncol(bench),
+  minutes = round(as.numeric(difftime(Sys.time(), t0, units = "mins")), 1))
+```
+
+`add_shapley()` appends the Shapley values and the derived quantities used in
+the tables of the article: the algorithmic term (covariate only forest minus
+GLM), the total gain over the GLM, the temporal increment when added last, the
+same increment with the `NN0` control present, and the spatial total. It also
+adds a `field` identifier that combines the configuration and the realisation;
+this is the bootstrap cluster.
+
+```{r add-shapley}
+bench <- add_shapley(bench)
+head(bench[, c("design", "n_time", "field", "GLM", "alg", "phi_COORD", "phi_EDF", "phi_LAG", "phi_TEMP", "total")], 4)
+table(bench$field)
+```
+
+### 8.1 Why the bootstrap resamples fields rather than datasets
+
+Datasets drawn from the same world share its covariate fields, latent structure
+and habitat mask, so they are not independent. Treating them as such would make
+intervals too narrow. `boot_ci()` resamples the independent field realisations
+with replacement and takes the mean of the field means in each replicate. The
+point estimate remains the dataset level mean.
+
+```{r boot}
+boot_ci(bench[bench$n_time == 5, ], "phi_EDF")
+```
+
+`decomp_table()` produces one row per component for a subset of datasets, with
+the interval and the share of the total gain:
+
+```{r decomp}
+A <- bench[bench$n_time == 5, ]
+tab <- rbind(decomp_table(A, "pooled"),
+             decomp_table(A[A$design == "random", ], "random"),
+             decomp_table(A[A$design == "clustered", ], "clustered"))
+tab$value <- round(tab$value, 3); tab$ci_lo <- round(tab$ci_lo, 3)
+tab$ci_hi <- round(tab$ci_hi, 3); tab$share_pct <- round(tab$share_pct, 1)
+tab[, c("subset", "component", "value", "ci_lo", "ci_hi", "share_pct", "n_datasets", "n_fields")]
+```
+
+```{r decomp-plot, fig.height = 3.8}
+comp <- c("Algorithmic flexibility", "Coordinates", "Distance fields", "Spatial lags", "Temporal")
+m <- sapply(c("random", "clustered"), function(s)
+  tab$value[tab$subset == s][match(comp, tab$component[tab$subset == s])])
+rownames(m) <- comp
+op <- par(mar = c(4, 9, 2, 1))
+barplot(t(m), beside = TRUE, horiz = TRUE, las = 1, col = c("#0072B2", "#D55E00"),
+        xlab = "Contribution to AUC gain over the GLM (T = 5, n = 100)", legend.text = TRUE,
+        args.legend = list(x = "bottomright", bty = "n"))
+abline(v = 0, lty = 3)
+par(op)
+```
+
+### 8.2 The temporal placebo and the NN0 control
+
+The same table can be computed by timestep span. At `n_time = 1` the temporal
+block is constant, so its Shapley value estimates the noise floor of the
+decomposition. The two "added last" quantities ask a different question: how
+much does the temporal block add once all spatial blocks are present, and does
+that increment survive when the same timestep nearest neighbour response
+(`NN0`) is also available? The second one separates genuine temporal information
+from information that a spatial neighbour would have supplied anyway.
+
+```{r temporal}
+do.call(rbind, lapply(c(1, 5), function(T) {
+  s <- bench[bench$n_time == T, ]
+  data.frame(n_time = T,
+             shapley_TEMP = round(boot_ci(s, "phi_TEMP")[["value"]], 4),
+             added_last = round(boot_ci(s, "temp_added_last")[["value"]], 4),
+             added_last_NN0 = round(boot_ci(s, "temp_marg_withNN0")[["value"]], 4),
+             n_datasets = nrow(s))
+}))
+```
+
+### 8.3 Reading these numbers
+
+The benchmark above has six fields and twelve datasets per timestep span. Its
+intervals are wide, and the values are specific to one sample size and two
+configurations. They illustrate the machinery rather than estimate the article's
+quantities, which rest on 36 fields, five sample sizes, three designs and four
+timestep spans. What should carry over, and is worth checking against your own
+run, is the structure: a placebo value near zero at `n_time = 1`, a spatial total
+that dominates the gain, and a smaller contribution of the clustered design's
+spatial lags, which have fewer neighbours to average.
+
+## 9. Area of applicability
+
+Spatial features built from the training sites are only as good as the coverage
+of those sites. `area_of_applicability()` implements the dissimilarity index of
+Meyer and Pebesma (2021, *Methods in Ecology and Evolution* 12, 1620 to 1633):
+the distance of each query point to its nearest training point in standardised
+predictor space, relative to the typical nearest neighbour distance within the
+training set. Points whose index exceeds the 95th percentile of the within
+training indices are flagged as outside the area of applicability.
+
+The predictor space used below is the four covariates plus the coordinates,
+which is the space in which a spatial random forest partitions the domain. The
+function also accepts an `importance` vector so that predictors can be weighted
+by their contribution to the fitted model, as in Supplement S9.
+
+```{r aoa}
+train_pred <- cbind(ds$Xc_tr, ds$btr$COORD)
+query_pred <- cbind(ds$Xc_te, ds$bte$COORD)
+a <- area_of_applicability(train_pred, query_pred)
+c(threshold = round(a$threshold, 3), share_inside = round(mean(a$inside), 3))
+```
+
+```{r aoa-map, fig.width = 5.6, fig.height = 5.6}
+op <- par(mar = c(4, 4, 2.5, 1), pty = "s")
+show_field(w$p[[5]], "Area of applicability, clustered design",
+           col = hcl.colors(24, "Grays", rev = TRUE))
+points(ds$bte$COORD, pch = 15, cex = 0.55, col = ifelse(a$inside, "#0072B2", "#D55E00"))
+points(ds$btr$COORD, pch = 21, bg = "white", cex = 0.9)
+legend("topleft", legend = c("site", "test cell inside", "test cell outside"), pch = c(21, 15, 15),
+       pt.bg = "white", col = c("black", "#0072B2", "#D55E00"), bg = "white", cex = 0.85)
+par(op)
+```
+
+Two kinds of cell fall outside the area of applicability: cells far from the
+three clusters, whose coordinates are unlike any site's, and cells whose
+covariate combination was never observed at a site, which in this world
+coincide with the darker high probability patches. Predictions there rely on
+extrapolating the covariate response and on lag features that fall back to the
+training mean, which is one reason the clustered design is the hardest regime
+in the benchmark.
+
+## 10. Reproducing the article
+
+### 10.1 The verification protocol
+
+The repository ships the mechanism checks of Sections 3.1 to 3.3 both as the
+package's `testthat` suite and as a human readable script. Run the script first
+on any new machine; every line must read `PASS`.
+
+```bash
+cd analysis
+Rscript 00_verify_engine.R
+```
+
+### 10.2 The benchmark stages
+
+`analysis/01_ablation_expanded.R` runs four stages with the function shown in
+Section 8, extended to five sample sizes and the full set of realisations:
+
+| Stage | Response | Detection | Designs | Realisations | Timesteps |
+|---|---|---|---|---|---|
+| A_designs | occurrence | 1.0 | all three | 0 to 5 | 1, 3, 5 |
+| B_T10 | occurrence | 1.0 | all three | 0 to 5 | 10 |
+| C_detect | occurrence | 0.7 | all three | 0 to 2 | 1, 3, 5 |
+| D_abundance | abundance | 1.0 | all three | 0 to 2 | 1, 3, 5 |
+
+The runner is resumable and shardable because every dataset is identified by
+its key (response, detection, design, configuration, realisation, `n`, `n_time`,
+replicate) and seeded by `dataset_seed()` from that key. Completed keys are
+skipped on restart, and shards running on different cores produce identical
+rows. `02_decompose.R` then applies `add_shapley()` and `decomp_table()` to the
+merged table to produce the decomposition tables of the article.
+
+### 10.3 Recomputing one archived row
+
+The seeding scheme means that any row of `results/ablation_expanded.csv` can be
+recomputed from its key alone. The chunk below is not evaluated when the
+vignette is built, since the archive lives outside the package; run it from the
+repository root with the package installed. Note that stage A worlds are built
+with five timesteps, the maximum of that stage, whatever the `n_time` of the row,
+because the world's random stream must be identical across all datasets drawn
+from it.
+
+```{r recompute, eval = FALSE}
+d <- read.csv("results/ablation_expanded.csv", check.names = FALSE, stringsAsFactors = FALSE)
+r <- d[d$stage == "A_designs" & d$design == "clustered" & d$world_cfg == "nonstat_r80" &
+       d$realisation == 1 & d$n == 100 & d$n_time == 5, ][1, ]
+wg <- Filter(function(g) g$cfg == r$world_cfg && g$real == r$realisation, world_grid(r$realisation))[[1]]
+w_r <- make_world(wg$stat, wg$range_km, n_time = 5, seed = wg$seed)
+di <- match(r$design, c("random", "clustered", "stratified"))
+dseed <- dataset_seed(wg$seed, r$n, r$n_time, di, r$rep, r$detection, r$response)
+d_r <- build_dataset(w_r, r$n, r$n_time, r$design, dseed, r$detection, r$response)
+mine <- c(GLM = glm_score(d_r), sapply(required_subsets(), function(S) score(d_r, S, dseed %% 10000L)))
+names(mine) <- c("GLM", sapply(required_subsets(), skey))
+max(abs(mine - unlist(r[names(mine)])))
+```
+
+On the machine used to prepare this tutorial (R 4.3.3, ranger 0.16.0, x86_64
+Linux) the maximum absolute difference across the 21 score columns was below
+`1e-15`. A difference at the third decimal or beyond on your machine most likely
+indicates a different `ranger` version rather than an error in the key.
+
+### 10.4 Figures and the case study
+
+The figure scripts in `figures/scripts/` read only `results/` and draw every
+figure of the article and its Supplement with `ggplot2`. The *Posidonia sinuosa*
+case study (`analysis/08_case_study.R`) applies the same four blocks to
+monitoring data from five Western Australian marine parks; those data are not
+redistributed, so that script requires the file described under *Data
+availability* in the README.
+
+## 11. Extending the engine
+
+The pieces of the pipeline are deliberately separable.
+
+**A new feature block.** `score()` binds the covariates to whichever matrices in
+`ds$btr` and `ds$bte` are named in its `subset` argument. A new block is
+therefore a pair of matrices added to those two lists, with the same number of
+rows as the training sites and the test cells respectively. To include it in the
+Shapley decomposition, extend `BLOCKS` in a fork of the package, because
+`required_subsets()` and `shapley_row()` enumerate coalitions from that
+constant; the number of coalitions doubles with each added block.
+
+**A new sampling design.** Any function that returns `n` distinct cell indices
+in `1:GRID^2` can replace `sample_sites()` inside a copy of `build_dataset()`.
+The leave one out convention for the lags and the exclusion of sites from the
+test pool are handled downstream and need no change.
+
+**A different scoring rule.** `score()` returns one number per fit. A
+replacement that returns, for example, the log loss or a calibration measure
+feeds `shapley_row()` unchanged, since the decomposition is defined on whatever
+value function the coalitions are scored with.
+
+**Changing the constants.** The grid size, the number of test cells, the forest
+size, the anchor count and the lag radii are fixed at package level. They are
+not function arguments because the article's seeds and archived results depend
+on them. A sensitivity analysis over these choices belongs in a fork with its
+own seeds, not in a parameter sweep on the installed package.
+
+## 12. Session information
+
+```{r session}
+sessionInfo()
+```

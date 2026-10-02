@@ -18,3 +18,8 @@ results/*.log
 # Raw case study data are third party monitoring data and are not redistributed.
 data/raw/
 *Bayesiandataset*
+
+# Vignette build outputs
+marineSim/inst/doc/
+marineSim/doc/
+marineSim/Meta/
