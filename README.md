@@ -174,7 +174,8 @@ the data custodians on request (see the article's Data Availability Statement).
 ## Citation
 
 See `CITATION.cff`. Please cite both the article and the archived software release.
-Version 1.0.0 is archived on Zenodo at https://doi.org/10.5281/zenodo.23103919.
+Version 1.0.0 is archived on Zenodo at https://doi.org/10.5281/zenodo.23103920 (version DOI).
+The concept DOI https://doi.org/10.5281/zenodo.23103919 always resolves to the latest version.
 
 ## Licence
 

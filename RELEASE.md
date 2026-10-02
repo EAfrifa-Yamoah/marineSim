@@ -178,7 +178,7 @@ Suggested Data Availability Statement, assuming the seagrass data cannot be redi
 (adjust if step 0.1 goes the other way):
 
 > All code required to reproduce the simulation study, the case study analyses and every
-> figure and table is archived on Zenodo (doi:10.5281/zenodo.23103919) and developed at
+> figure and table is archived on Zenodo (doi:10.5281/zenodo.23103920) and developed at
 > https://github.com/EAfrifa-Yamoah/marineSim. The simulation study is fully synthetic and
 > regenerates from the seeds recorded in the archive. The *Posidonia sinuosa* monitoring
 > data underpinning the case study are held by [custodian] and are available on request
