@@ -5,9 +5,10 @@ Authors@R: c(
     person("Ebenezer", "Afrifa-Yamoah", email = "e.afrifayamoah@ecu.edu.au",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1741-9249")),
     person("Francky", "Fouedjio", role = "aut"),
-    person("Ute", "Mueller", role = "aut"),
-    person("Kathryn", "McMahon", role = "aut"),
-    person("Glenn A.", "Hyndes", role = "aut"))
+    person("Emet", "Arya", role = "aut"),
+    person("Yaw Kwaafo", "Awuah-Mensah", role = "aut"),
+    person("Alexandre", "Siqueira", role = "aut"),
+    person("Ute", "Mueller", role = "aut")
 Description: The simulation engine behind the article "Spatio-temporal random
     forests with adaptive local features for marine species distribution
     modelling under data limitation". Provides the Matern Gaussian random field
