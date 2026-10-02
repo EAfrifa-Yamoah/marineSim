@@ -178,7 +178,7 @@ Suggested Data Availability Statement, assuming the seagrass data cannot be redi
 (adjust if step 0.1 goes the other way):
 
 > All code required to reproduce the simulation study, the case study analyses and every
-> figure and table is archived on Zenodo (doi:10.5281/zenodo.XXXXXXX) and developed at
+> figure and table is archived on Zenodo (doi:10.5281/zenodo.23103919) and developed at
 > https://github.com/EAfrifa-Yamoah/marineSim. The simulation study is fully synthetic and
 > regenerates from the seeds recorded in the archive. The *Posidonia sinuosa* monitoring
 > data underpinning the case study are held by [custodian] and are available on request
@@ -188,7 +188,7 @@ Suggested Data Availability Statement, assuming the seagrass data cannot be redi
 Add the badge to the top of `README.md` (concept DOI, so it tracks the latest version):
 
 ```markdown
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23103919.svg)](https://doi.org/10.5281/zenodo.23103919)
 ```
 
 ---
