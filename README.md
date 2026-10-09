@@ -39,7 +39,8 @@ marineSim/              R package: the simulation engine (install this first)
 analysis/               scripts that produce every number in the article, in order
   00_verify_engine.R    PASS/FAIL mechanism checks (run first)
   01_ablation_expanded.R  GLM + 20 coalitions on the expanded grid (resumable, shardable)
-  02_decompose.R        Shapley tables T1 to T5 with cluster bootstrap
+  02_decompose.R        Shapley tables T1 to T7 with cluster bootstrap
+  02b_temporal_coverage.R  temporal value against nearest site distance (T8); clustered design random fill
   03_gam_core.R         spatial GAM on the Stage A datasets
   04_core_benchmark_table.R  five method core benchmark (Figure 3, Table 2)
   05_si_figures_data.R  worlds, tuning sensitivity, calibration (S2 to S5)
@@ -48,13 +49,15 @@ analysis/               scripts that produce every number in the article, in ord
   08_case_study.R       Posidonia sinuosa case study (Section 4, S7 to S9)
 results/                outputs of the scripts above, as reported
   ablation_expanded.csv       3,779 datasets x (GLM + 20 coalitions)
-  expanded_T1..T5_*.csv       decomposition tables
+  expanded_T1..T8_*.csv       decomposition tables (T6 to T8 resolve the temporal block by n, design and coverage)
+  temporal_coverage_T5.csv    per dataset nearest site distance and Shapley values behind Figure 4c
+  clustered_random_fill.csv   share of clustered sites placed at random after de-duplication
   core_five_methods.csv       Figure 3 / Table 2 data
   si/                         gam_core, figS2..S4 data, tableS1/S5/S6
   case_study/                 cv_regimes, importance, corridor, hovmoller, rolling_origin, intervals, meta.json
 figures/
   main/Figure2..8.png   article figures (Figure 1 is a schematic drawn outside R)
-  si/FigureS1..S8.png   Supplement figures
+  si/FigureS1..S9.png   Supplement figures
   scripts/              ggplot2 scripts that draw the figures from results/ (figstyle.R holds the palette)
 data/
   coast_wa.json         simplified Western Australian coastline used for the corridor maps
@@ -117,7 +120,8 @@ sample size, timesteps, design, replicate, detection and response type
 Then:
 
 ```bash
-Rscript 02_decompose.R            # tables T1 to T5            (minutes)
+Rscript 02_decompose.R            # tables T1 to T7            (minutes)
+Rscript 02b_temporal_coverage.R   # table T8, coverage per dataset (~5 min)
 Rscript 03_gam_core.R             # spatial GAM                 (~1 h)
 Rscript 04_core_benchmark_table.R # Figure 3 data, Table 2 columns
 Rscript 05_si_figures_data.R      # S2 to S5 data              (~30 min)
@@ -138,8 +142,8 @@ Rscript 08_case_study.R           # ~5 min on one core
 
 ```bash
 cd ../figures/scripts
-Rscript make_figures_2_4_5.R; Rscript make_figure_3.R
-Rscript make_figures_S2_S3_S4.R; Rscript make_figure_S8.R; Rscript make_figure_S1.R
+Rscript make_figures_2_5.R; Rscript make_figure_3.R; Rscript make_figure_4.R
+Rscript make_figures_S2_S3_S4.R; Rscript make_figure_S8.R; Rscript make_figure_S1.R; Rscript make_figure_S9.R
 Rscript make_figures_case.R       # Figures 6 to 8 and S5 to S7
 ```
 
@@ -158,7 +162,7 @@ files were produced by these scripts with ggplot2 3.4.4, patchwork 1.2.0 and rag
   exactly from `ablation_expanded.csv`.
 * The case study rerun from `08_case_study.R` reproduces every archived CSV in `results/case_study/` exactly.
 * Twelve GAM fits rerun through `03_gam_core.R` match `si/gam_core.csv` to 1e-9.
-* All fifteen figure files were regenerated from `results/` by the R scripts and
+* All sixteen figure files were regenerated from `results/` by the R scripts and
   checked visually against the previous matplotlib renderings.
 
 ## Data availability

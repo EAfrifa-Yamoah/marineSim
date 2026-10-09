@@ -1,3 +1,12 @@
+# marineSim 3.0.1 (2026-10-09)
+
+* Figure 4 now resolves the temporal block by span, sample size and spatial
+  coverage (tables T6 to T8, `02b_temporal_coverage.R`); the former pooled
+  figure is Supplement Figure S9.
+* Documented that the clustered design saturates its three cluster footprints at
+  large n and is topped up with randomly placed cells (14% of sites at n = 100,
+  25% at n = 200, 45% at n = 500); `results/clustered_random_fill.csv`.
+
 # marineSim 3.0.0 (2026-10-01)
 
 Release accompanying the submitted article. R is the sole computational engine.
