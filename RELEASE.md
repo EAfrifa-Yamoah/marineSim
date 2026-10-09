@@ -42,8 +42,8 @@ Repeat it on your own machine before pushing, because a reviewer will run it:
 
 ```bash
 R CMD build marineSim
-_R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-manual marineSim_1.0.0.tar.gz
-R CMD INSTALL marineSim_1.0.0.tar.gz
+_R_CHECK_FORCE_SUGGESTS_=false R CMD check --no-manual marineSim_2.0.0.tar.gz
+R CMD INSTALL marineSim_2.0.0.tar.gz
 cd analysis && Rscript 00_verify_engine.R      # every line PASS
 ```
 
@@ -53,8 +53,8 @@ cd analysis && Rscript 00_verify_engine.R      # every line PASS
 commit:
 
 ```bash
-git ls-files figures/ | wc -l     # expect 22 (15 png + 6 R scripts + figstyle.R)
-git ls-files results/ | wc -l     # expect 30
+git ls-files figures/ | wc -l     # expect 25 (16 png + 8 R scripts + figstyle.R)
+git ls-files results/ | wc -l     # expect 35
 git ls-files data/                # expect data/coast_wa.json only
 ```
 
@@ -85,7 +85,7 @@ this repository already has them.
 ### 1.2 Push
 
 The repository already carries its git history and the earlier tags v2.0.0 and
-v2.0.1 (the July revision); the new release is v1.0.0. From the repository root:
+v2.0.1 (the July revision); the current release is v2.0.0 (v1.0.0 is archived on Zenodo as 10.5281/zenodo.23103920). From the repository root:
 
 ```bash
 git remote add origin https://github.com/EAfrifa-Yamoah/marineSim.git
@@ -129,8 +129,8 @@ repositories.
 
 Back on GitHub: **Releases** → **Create a new release**.
 
-- **Tag**: `v1.0.0` (already created locally and pushed in 1.2; it matches `Version:` in `marineSim/DESCRIPTION`)
-- **Title**: `marineSim v1.0.0 — stRF for marine SDM under data limitation`
+- **Tag**: `v2.0.0` (already created locally and pushed in 1.2; it matches `Version:` in `marineSim/DESCRIPTION`)
+- **Title**: `marineSim v2.0.0 — stRF for marine SDM under data limitation (corrected sampling designs)`
 - **Description**: one paragraph on what the release contains, and note that it
   accompanies the MEE submission.
 - **Publish release.**

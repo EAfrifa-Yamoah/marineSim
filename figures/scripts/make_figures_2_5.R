@@ -1,4 +1,4 @@
-# Figures 2, 4 and 5: feature block Shapley decomposition from results/expanded_T*.csv
+# Figures 2 and 5: feature block Shapley decomposition from results/expanded_T*.csv
 source(file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])), "figstyle.R"))
 t1 <- read.csv(res("expanded_T1_decomposition_by_design.csv")); t2 <- read.csv(res("expanded_T2_temporal_by_T.csv"))
 t3 <- read.csv(res("expanded_T3_detection.csv")); t4 <- read.csv(res("expanded_T4_abundance.csv")); t5 <- read.csv(res("expanded_T5_NN0_by_design.csv"))
@@ -32,19 +32,6 @@ pb <- ggplot(d5, aes(design, value, fill = control)) +
 fig2 <- (pa + pb) + plot_layout(widths = c(1.35, 1), guides = "collect") +
   plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
 save_png(fig2, "main/Figure2.png", 10, 4.2)
-
-# ---- Figure 4: temporal contribution by T
-t2$quantity <- factor(t2$quantity, levels = c("Shapley", "Added last", "Added last, NN0 controlled"))
-fig4 <- ggplot(t2, aes(n_time, value, shape = quantity, linetype = quantity)) +
-  geom_hline(yintercept = 0, colour = "grey50", linewidth = 0.3) +
-  geom_errorbar(aes(ymin = ci_lo, ymax = ci_hi), width = 0.25, linewidth = 0.4, colour = COMP_COL[["Temporal"]], linetype = "solid") +
-  geom_line(colour = COMP_COL[["Temporal"]], linewidth = 0.7) +
-  geom_point(colour = COMP_COL[["Temporal"]], fill = COMP_COL[["Temporal"]], size = 2.2) +
-  annotate("text", x = 1.2, y = 0.0055, label = "placebo", size = 2.6, colour = "grey35", hjust = 0) +
-  scale_shape_manual(values = c(16, 15, 17)) + scale_linetype_manual(values = c("solid", "22", "11")) +
-  scale_x_continuous(breaks = c(1, 3, 5, 10)) +
-  labs(x = "Number of timesteps", y = "Temporal contribution (ΔAUC)", shape = NULL, linetype = NULL)
-save_png(fig4, "main/Figure4.png", 6.4, 3.9)
 
 # ---- Figure 5: (a) detection, (b) occurrence vs abundance shares
 gd <- unique(t3$subset); gd <- gd[order(-as.numeric(sub(".* ", "", gd)))]

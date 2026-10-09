@@ -9,8 +9,8 @@ abstract: >-
   spatial random forest and an sdmTMB Matérn random field comparator across a factorial simulation
   and a Posidonia sinuosa seagrass case study in Western Australia.
 type: software
-version: 1.0.0
-date-released: 2026-10-02
+version: 2.0.0
+date-released: 2026-10-09
 license: MIT
 repository-code: "https://github.com/EAfrifa-Yamoah/marineSim"
 doi: 10.5281/zenodo.23103920

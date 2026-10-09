@@ -4,7 +4,10 @@
 # Exact Shapley over the 16 coalitions of {COORD, EDF, LAG, TEMP}; 95% intervals
 # from a cluster bootstrap over independent field realisations (B = 2000).
 # Writes results/expanded_T1_decomposition_by_design.csv, T2_temporal_by_T,
-# T3_detection, T4_abundance, T5_NN0_by_design. Usage: Rscript 02_decompose.R
+# T3_detection, T4_abundance, T5_NN0_by_design, T6_temporal_by_T_n (temporal
+# Shapley, its share of the total gain and the NN0 controlled increment within
+# each timesteps x sample size cell) and T7_temporal_by_n_design (T >= 3).
+# Usage: Rscript 02_decompose.R
 # =============================================================================
 suppressPackageStartupMessages(library(marineSim))
 OUT_DIR <- Sys.getenv("ABL_OUT_DIR", "../results")
@@ -46,6 +49,23 @@ main <- function() {
     rbind(data.frame(design = dsg, quantity = "Temporal marginal, no control", t(boot_ci(s, "temp_added_last")), n_datasets = nrow(s)),
           data.frame(design = dsg, quantity = "Temporal marginal, NN0 controlled", t(boot_ci(s, "temp_marg_withNN0")), n_datasets = nrow(s)))
   }))
+
+  # T6: temporal value resolved by timesteps x sample size (pooled over designs and worlds)
+  share_ci <- function(s, B = 2000, seed = 1) {   # ratio of means, cluster bootstrap over fields
+    set.seed(seed); f <- split(s, s$field); G <- length(f)
+    m <- sapply(f, function(x) c(mean(x$phi_TEMP), mean(x$total)))
+    dr <- replicate(B, { k <- sample.int(G, G, TRUE); 100 * mean(m[1, k]) / mean(m[2, k]) })
+    c(value = 100 * mean(s$phi_TEMP) / mean(s$total), ci_lo = unname(quantile(dr, 0.025)), ci_hi = unname(quantile(dr, 0.975)))
+  }
+  out$T6_temporal_by_T_n <- do.call(rbind, lapply(split(B, list(B$n_time, B$n)), function(s) {
+    rbind(data.frame(n_time = s$n_time[1], n = s$n[1], quantity = "Shapley", t(boot_ci(s, "phi_TEMP")), n_datasets = nrow(s)),
+          data.frame(n_time = s$n_time[1], n = s$n[1], quantity = "Added last, NN0 controlled", t(boot_ci(s, "temp_marg_withNN0")), n_datasets = nrow(s)),
+          if (s$n_time[1] > 1) data.frame(n_time = s$n_time[1], n = s$n[1], quantity = "Share of total gain (%)", t(share_ci(s)), n_datasets = nrow(s))) }))
+  out$T6_temporal_by_T_n <- out$T6_temporal_by_T_n[order(out$T6_temporal_by_T_n$quantity, out$T6_temporal_by_T_n$n, out$T6_temporal_by_T_n$n_time), ]
+  # T7: temporal Shapley by sample size x design, pooled over T in {3, 5, 10}
+  B3 <- B[B$n_time >= 3, ]
+  out$T7_temporal_by_n_design <- do.call(rbind, lapply(split(B3, list(B3$n, B3$design)), function(s)
+    data.frame(n = s$n[1], design = s$design[1], t(boot_ci(s, "phi_TEMP")), n_datasets = nrow(s))))
 
   for (nm in names(out)) {
     write.csv(out[[nm]], file.path(OUT_DIR, paste0("expanded_", nm, ".csv")), row.names = FALSE)

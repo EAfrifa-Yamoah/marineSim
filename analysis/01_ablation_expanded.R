@@ -12,7 +12,8 @@
 #   ABL_SHARD=0/4 Rscript 01_ablation_expanded.R   # one of four shards (see README)
 #   ABL_BUDGET=120 Rscript 01_ablation_expanded.R  # stop after 120 s (smoke test)
 #
-# Environment: ABL_OUT_DIR (default ../results), ABL_SHARD (k/K), ABL_BUDGET (s).
+# Environment: ABL_OUT_DIR (default ../results), ABL_SHARD (k/K), ABL_BUDGET (s),
+#   ABL_DESIGNS (comma separated subset of the designs to run, e.g. "clustered,stratified").
 # =============================================================================
 suppressPackageStartupMessages(library(marineSim))
 
@@ -27,6 +28,7 @@ T_START <- Sys.time()
 run_stage <- function(stage, response, detection, designs, realisations, timesteps,
                       sizes = c(30, 50, 100, 200, 500), reps = 1) {
   subs <- required_subsets()
+  if (nzchar(Sys.getenv("ABL_DESIGNS"))) designs <- designs[designs %in% strsplit(Sys.getenv("ABL_DESIGNS"), ",")[[1]]]
   done <- character(0)
   if (file.exists(OUT)) { prev <- read.csv(OUT, stringsAsFactors = FALSE, check.names = FALSE)
     done <- do.call(paste, c(prev[KEY], sep = "|")) }
@@ -41,7 +43,7 @@ run_stage <- function(stage, response, detection, designs, realisations, timeste
       if (key %in% done) next
       if (BUDGET > 0 && as.numeric(difftime(Sys.time(), T_START, units = "secs")) > BUDGET) {
         cat(sprintf("[%s] budget reached; rows %d (resumable)\n", stage, nrow_done)); return(invisible()) }
-      dseed <- dataset_seed(wg$seed, n, nt, di, rep, detection, response)
+      dseed <- dataset_seed(wg$seed, n, nt, match(designs[di], c("random", "clustered", "stratified")), rep, detection, response)
       ds <- build_dataset(w, n, nt, designs[di], dseed, detection, response)
       if (is.null(ds)) next
       rec <- data.frame(stage = stage, response = response, detection = detection,

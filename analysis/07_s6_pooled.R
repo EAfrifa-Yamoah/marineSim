@@ -3,7 +3,7 @@
 # predicting the final timestep, like for like with spatiotemporal sdmTMB.
 # Writes results/si/tableS6_strf_pooled.csv. Usage: Rscript 07_s6_pooled.R
 # =============================================================================
-suppressPackageStartupMessages(library(marineSim))
+suppressPackageStartupMessages({library(marineSim); library(ranger)})
 OUT_DIR <- Sys.getenv("ABL_OUT_DIR", "../results")
 build_pooled <- function(w, ds) {
   xy <- ds$btr$COORD; n <- nrow(xy); K <- min(N_ANCHORS, n)
