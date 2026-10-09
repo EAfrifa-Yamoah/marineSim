@@ -5,7 +5,7 @@
 # meshes via fmesher. Usage: Rscript 06_s6_sdmtmb.R (~2 h; timings depend on the
 # TMB build flags, see README)
 # =============================================================================
-suppressPackageStartupMessages({library(marineSim); library(sdmTMB)})
+suppressPackageStartupMessages({library(marineSim); library(ranger); library(sdmTMB)})
 OUT_DIR <- Sys.getenv("ABL_OUT_DIR", "../results")
 OUT_S6 <- file.path(OUT_DIR, "si"); dir.create(OUT_S6, showWarnings = FALSE, recursive = TRUE)
 CUTOFF <- 20

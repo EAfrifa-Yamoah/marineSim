@@ -7,7 +7,7 @@
 # Writes CSVs to results/si/; the figures are drawn from these files by
 # figures/scripts/plot_si_figs.py. Usage: Rscript 05_si_figures_data.R (~30 min)
 # =============================================================================
-suppressPackageStartupMessages({library(marineSim); library(mgcv)})
+suppressPackageStartupMessages({library(marineSim); library(ranger); library(mgcv)})
 OUT_DIR <- Sys.getenv("ABL_OUT_DIR", "../results")
 OUT_SI <- file.path(OUT_DIR, "si"); dir.create(OUT_SI, showWarnings = FALSE, recursive = TRUE)
 worlds6 <- world_grid(0)             # realisation 0 of each of the six configurations

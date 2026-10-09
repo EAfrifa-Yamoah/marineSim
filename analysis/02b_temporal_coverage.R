@@ -6,8 +6,8 @@
 # nearest training site, and relates the temporal Shapley value to that distance.
 # Writes results/temporal_coverage_T5.csv (one row per dataset) and
 # results/expanded_T8_temporal_by_coverage.csv (binned means with cluster
-# bootstrap intervals, by design). Also reports how many clustered sites are
-# random fill once the three cluster footprints saturate (Section 3.2).
+# bootstrap intervals, by design). Also records the random fill of the legacy
+# clustered design of marineSim 3.0.x for the record (Supplement S2).
 # Usage: Rscript 02b_temporal_coverage.R   (~5 min; needs ablation_expanded.csv)
 # =============================================================================
 suppressPackageStartupMessages(library(marineSim))
@@ -34,7 +34,8 @@ t8 <- t8[order(t8$design, t8$x_km), ]
 write.csv(t8, file.path(OUT_DIR, "expanded_T8_temporal_by_coverage.csv"), row.names = FALSE)
 cat("Temporal Shapley (T = 5) by median distance from a test cell to its nearest site\n"); print(t8, digits = 3, row.names = FALSE)
 
-# Random fill in the clustered design: cells drawn uniformly once the clusters saturate
+# Random fill in the LEGACY clustered design (marineSim 3.0.x): cells drawn uniformly once the three
+# cluster footprints saturated. The current design draws n distinct cells by weighted sampling and has no fill.
 set.seed(1); fill <- NULL
 for (n in c(30, 50, 100, 200, 500)) for (r in 1:50) {
   g <- GRID; ctr <- matrix(runif(6, 0.15, 0.85) * g, 3, 2); per <- rep(n %/% 3, 3); per[seq_len(n %% 3)] <- per[seq_len(n %% 3)] + 1
@@ -42,5 +43,5 @@ for (n in c(30, 50, 100, 200, 500)) for (r in 1:50) {
   for (k in 1:3) { rr <- round(ctr[k, 1] + rnorm(per[k], 0, g * 0.06)); cc <- round(ctr[k, 2] + rnorm(per[k], 0, g * 0.06)); cells <- c(cells, cell_idx(rr, cc)) }
   fill <- rbind(fill, data.frame(n = n, fill_pct = 100 * (n - length(unique(cells))) / n))
 }
-f <- aggregate(fill_pct ~ n, fill, mean); cat("\nClustered design: mean percentage of sites placed at random after de-duplication\n"); print(f, digits = 3, row.names = FALSE)
-write.csv(f, file.path(OUT_DIR, "clustered_random_fill.csv"), row.names = FALSE)
+f <- aggregate(fill_pct ~ n, fill, mean); cat("\nLegacy clustered design: mean percentage of sites placed at random after de-duplication\n"); print(f, digits = 3, row.names = FALSE)
+write.csv(f, file.path(OUT_DIR, "clustered_legacy_random_fill.csv"), row.names = FALSE)

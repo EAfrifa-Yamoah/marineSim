@@ -48,10 +48,10 @@ analysis/               scripts that produce every number in the article, in ord
   07_s6_pooled.R        stRF on pooled timesteps (S6)
   08_case_study.R       Posidonia sinuosa case study (Section 4, S7 to S9)
 results/                outputs of the scripts above, as reported
-  ablation_expanded.csv       3,779 datasets x (GLM + 20 coalitions)
+  ablation_expanded.csv       3,774 datasets x (GLM + 20 coalitions)
   expanded_T1..T8_*.csv       decomposition tables (T6 to T8 resolve the temporal block by n, design and coverage)
   temporal_coverage_T5.csv    per dataset nearest site distance and Shapley values behind Figure 4c
-  clustered_random_fill.csv   share of clustered sites placed at random after de-duplication
+  clustered_legacy_random_fill.csv  random fill of the 3.0.x clustered generator, kept for the record
   core_five_methods.csv       Figure 3 / Table 2 data
   si/                         gam_core, figS2..S4 data, tableS1/S5/S6
   case_study/                 cv_regimes, importance, corridor, hovmoller, rolling_origin, intervals, meta.json
@@ -157,7 +157,8 @@ files were produced by these scripts with ggplot2 3.4.4, patchwork 1.2.0 and rag
 * `R CMD check` passes (one NOTE: sdmTMB, a suggested package, was not installed on the checking machine).
 * A 131 dataset slice of Stage A rerun through the installed package reproduces the
   archived `ablation_expanded.csv` rows exactly (21 score columns, maximum absolute
-  difference 0).
+  difference 0); after the 4.0.0 design change the random design rows were rerun
+  again and still match.
 * `02_decompose.R` and `04_core_benchmark_table.R` reproduce the archived tables
   exactly from `ablation_expanded.csv`.
 * The case study rerun from `08_case_study.R` reproduces every archived CSV in `results/case_study/` exactly.

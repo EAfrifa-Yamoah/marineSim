@@ -20,16 +20,24 @@ test_that("abundance counts are ecological", {
   expect_gt(mean(yc), 3); expect_lt(mean(yc), 15); expect_lt(max(yc), 2000)
 })
 
-test_that("sampling designs draw valid distinct cells", {
+test_that("sampling designs draw exactly n distinct valid cells at every n", {
   set.seed(1)
-  for (dsg in c("random", "clustered", "stratified")) {
-    s <- sample_sites(100, dsg)
-    expect_equal(length(unique(s)), 100)
+  for (dsg in c("random", "clustered", "stratified", "clustered_legacy", "stratified_legacy")) for (n in c(30, 500)) {
+    s <- sample_sites(n, dsg)
+    expect_equal(length(unique(s)), n)
     expect_true(all(s >= 1 & s <= GRID^2))
   }
+})
+
+test_that("the clustered design stays clustered at large n and the stratified design is one cell per block", {
   set.seed(2)
-  expect_lt(sd(cell_xy(sample_sites(100, "clustered"))[, 1]),
-            sd(cell_xy(sample_sites(100, "random"))[, 1]))
+  near25 <- function(site) { test <- setdiff(seq_len(GRID^2), site); mean(rowSums(dist_km(cell_xy(test), cell_xy(site)) <= 25) > 0) }
+  cl <- mean(replicate(5, near25(sample_sites(500, "clustered")))); rn <- mean(replicate(5, near25(sample_sites(500, "random"))))
+  expect_lt(cl, 0.5); expect_gt(rn, 0.95)                      # random covers the domain at n = 500, clustered does not
+  expect_lt(sd(cell_xy(sample_sites(100, "clustered"))[, 1]), sd(cell_xy(sample_sites(100, "random"))[, 1]))
+  s <- sample_sites(200, "stratified"); k <- ceiling(sqrt(200)); r <- (s - 1) %% GRID + 0.5; cc <- (s - 1) %/% GRID + 0.5
+  block <- pmin(floor(r / GRID * k), k - 1) * k + pmin(floor(cc / GRID * k), k - 1)
+  expect_equal(length(unique(block)), 200)                     # no two sites share a block
 })
 
 test_that("dataset build and forest score are deterministic", {

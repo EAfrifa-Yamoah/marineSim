@@ -9,17 +9,30 @@ sample_sites(n, design)
 \arguments{
 \item{n}{Number of sites.}
 
-\item{design}{One of \code{"random"}, \code{"clustered"}, \code{"stratified"}.}
+\item{design}{One of \code{"random"}, \code{"clustered"}, \code{"stratified"},
+\code{"clustered_legacy"}, \code{"stratified_legacy"}.}
 }
 \value{
 Integer vector of \code{n} distinct cell indices.
 }
 \description{
-Returns \code{n} distinct grid cells. \code{"random"} is simple random sampling
-of cells. \code{"clustered"} places three Gaussian clusters whose centres are
-uniform on the central 70 percent of each axis and whose spread is 6 percent
-of the grid, filling any shortfall from duplicate cells at random.
-\code{"stratified"} partitions the grid into \eqn{\lceil\sqrt{n}\rceil^2} equal
-blocks, chooses \code{n} of them without replacement and draws one cell
-uniformly within each.
+Returns \code{n} distinct grid cells.
+\describe{
+  \item{\code{"random"}}{Simple random sampling of cells.}
+  \item{\code{"clustered"}}{Preferential sampling from three Gaussian clusters:
+    the cluster centres are uniform on the central 70 percent of each axis and
+    the spread is 6 percent of the grid side (about 24 km). Cells are drawn
+    without replacement with probability proportional to the mixture intensity
+    at the cell centre, so that exactly \code{n} distinct cells are returned and
+    the design remains clustered at every \code{n}.}
+  \item{\code{"stratified"}}{The grid is partitioned into
+    \eqn{\lceil\sqrt{n}\rceil^2} equal blocks, \code{n} blocks are chosen without
+    replacement, and one cell is drawn uniformly from each chosen block.}
+  \item{\code{"clustered_legacy"}, \code{"stratified_legacy"}}{The generators of
+    marineSim 3.0.x, retained so that those results can be reproduced. They
+    drew continuous positions, rounded them to cells, discarded duplicates and
+    topped the sample up with uniformly random cells; for the clustered design
+    the top up reached 25 percent of sites at \code{n = 200} and 45 percent at
+    \code{n = 500}.}
+}
 }

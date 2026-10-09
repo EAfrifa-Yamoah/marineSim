@@ -1,3 +1,26 @@
+# marineSim 4.0.0 (2026-10-09)
+
+Results change in this release: every clustered and stratified design number in
+the article is replaced.
+
+* `sample_sites()` now implements the clustered design as preferential sampling
+  (cells drawn without replacement with probability proportional to a three
+  component Gaussian intensity), so exactly n distinct cells are returned and the
+  design stays clustered at every n. The previous generator rounded continuous
+  draws to cells and topped up collisions with uniformly random cells, which made
+  14% (n = 100), 25% (n = 200) and 45% (n = 500) of "clustered" sites random; it
+  is retained as `"clustered_legacy"`. The stratified design now draws one cell
+  per chosen block (previously about 3% of sites collided at n = 500 and were
+  topped up at random; retained as `"stratified_legacy"`).
+* The clustered and stratified arms of the benchmark (2,520 datasets) and their
+  GAM comparator fits were rerun; random design rows are unchanged and reproduce
+  the 3.0.x archive exactly. `results/` and all affected figures and tables are
+  updated. Six clustered draws with a degenerate training response were
+  discarded (3,774 datasets, 79,254 fits).
+* `01_ablation_expanded.R` and `03_gam_core.R` accept `ABL_DESIGNS` to rerun a
+  subset of designs; `05_si_figures_data.R`, `06_s6_sdmtmb.R` and `07_s6_pooled.R`
+  now attach ranger explicitly.
+
 # marineSim 3.0.1 (2026-10-09)
 
 * Figure 4 now resolves the temporal block by span, sample size and spatial

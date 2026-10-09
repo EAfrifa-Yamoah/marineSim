@@ -8,11 +8,14 @@
 suppressPackageStartupMessages({library(marineSim); library(mgcv)})
 OUT_DIR <- Sys.getenv("ABL_OUT_DIR", "../results")
 OUT_G <- file.path(OUT_DIR, "si", "gam_core.csv"); dir.create(dirname(OUT_G), showWarnings = FALSE, recursive = TRUE)
-rows <- list()
+rows <- list(); DESIGNS <- c("random", "clustered", "stratified")
+if (nzchar(Sys.getenv("ABL_DESIGNS"))) DESIGNS <- strsplit(Sys.getenv("ABL_DESIGNS"), ",")[[1]]
+if (file.exists(OUT_G) && nzchar(Sys.getenv("ABL_DESIGNS"))) {   # keep rows of the designs not being rerun
+  prev <- read.csv(OUT_G, stringsAsFactors = FALSE); rows <- split(prev[!prev$design %in% DESIGNS, ], seq_len(sum(!prev$design %in% DESIGNS))) }
 for (wg in world_grid(0:5)) {
   w <- make_world(wg$stat, wg$range_km, n_time = 5, seed = wg$seed)
-  for (di in 1:3) for (n in c(30, 50, 100, 200, 500)) for (nt in c(1, 3, 5)) {
-    dsg <- c("random", "clustered", "stratified")[di]
+  for (dsg in DESIGNS) for (n in c(30, 50, 100, 200, 500)) for (nt in c(1, 3, 5)) {
+    di <- match(dsg, c("random", "clustered", "stratified"))
     dseed <- dataset_seed(wg$seed, n, nt, di)
     ds <- build_dataset(w, n, nt, dsg, dseed); if (is.null(ds)) next
     dtr <- data.frame(y = ds$y_tr, ds$Xc_tr, X = ds$btr$COORD[, 1], Y = ds$btr$COORD[, 2])
