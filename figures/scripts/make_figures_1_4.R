@@ -17,7 +17,7 @@ bars <- function(tab, groups, labels, ylab) {
     labs(x = NULL, y = ylab, fill = NULL)
 }
 
-# ---- Figure 2: (a) by design, (b) NN0 control by design
+# ---- Figure 1: (a) by design, (b) NN0 control by design
 pa <- bars(t1, c("pooled (all designs)", "random", "stratified", "clustered"), c("pooled", "random", "stratified", "clustered"),
            "Shapley contribution (ΔAUC)")
 d5 <- t5[t5$quantity %in% c("Temporal marginal, no control", "Temporal marginal, NN0 controlled"), ]
@@ -29,11 +29,11 @@ pb <- ggplot(d5, aes(design, value, fill = control)) +
   geom_errorbar(aes(ymin = ci_lo, ymax = ci_hi), position = position_dodge(width = 0.7), width = 0.2, linewidth = 0.35) +
   scale_fill_manual(values = c("temporal, no control (b)" = COMP_COL[["Temporal"]], "temporal, NN0 controlled (b)" = "white")) +
   labs(x = NULL, y = "Temporal increment when added last (ΔAUC)", fill = NULL)
-fig2 <- (pa + pb) + plot_layout(widths = c(1.35, 1), guides = "collect") +
+fig1 <- (pa + pb) + plot_layout(widths = c(1.35, 1), guides = "collect") +
   plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
-save_png(fig2, "main/Figure2.png", 10, 4.2)
+save_png(fig1, "main/Figure1.png", 10, 4.2)
 
-# ---- Figure 5: (a) detection, (b) occurrence vs abundance shares
+# ---- Figure 4: (a) detection, (b) occurrence vs abundance shares
 gd <- unique(t3$subset); gd <- gd[order(-as.numeric(sub(".* ", "", gd)))]
 pa5 <- bars(t3, gd, sprintf("detection %.1f", as.numeric(sub(".* ", "", gd))), "Shapley contribution (ΔAUC)")
 bp <- t1[t1$subset == "pooled (all designs)" & t1$component %in% COMP, ]; ab <- t4[t4$subset == "abundance pooled" & t4$component %in% COMP, ]
@@ -47,6 +47,6 @@ pb5 <- ggplot(sh, aes(component, share, fill = component, alpha = response)) +
   guides(alpha = guide_legend(override.aes = list(fill = "grey30"))) +
   labs(x = NULL, y = "Share of total gain (%)", alpha = NULL) +
   theme(axis.text.x = element_text(size = 7.5, angle = 12, hjust = 0.8))
-fig5 <- (pa5 + pb5) + plot_layout(guides = "collect") +
+fig4 <- (pa5 + pb5) + plot_layout(guides = "collect") +
   plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
-save_png(fig5, "main/Figure5.png", 10, 4.2)
+save_png(fig4, "main/Figure4.png", 10, 4.2)

@@ -1,5 +1,5 @@
 # Figure S9: the pooled temporal contribution by T under three estimators (exact Shapley; increment when the
-# block is added last; the same increment with the same timestep neighbour control present). Formerly main text Figure 4.
+# block is added last; the same increment with the same timestep neighbour control present). Formerly main text Figure 3.
 source(file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])), "figstyle.R"))
 t2 <- read.csv(res("expanded_T2_temporal_by_T.csv"))
 t2$quantity <- factor(t2$quantity, levels = c("Shapley", "Added last", "Added last, NN0 controlled"))

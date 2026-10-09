@@ -20,9 +20,9 @@ that revision remains in the history before 1.0.0.)
   the 1.0.0 archive exactly. `results/` and all affected figures and tables are
   updated. Six clustered draws with a degenerate training response were
   discarded (3,774 datasets, 79,254 fits).
-* Figure 4 now resolves the temporal block by span, sample size and spatial
+* Figure 3 now resolves the temporal block by span, sample size and spatial
   coverage (tables T6 to T8, `02b_temporal_coverage.R`); the former pooled figure
-  is Supplement Figure S9. Figure 3 shows the clustered and stratified design
+  is Supplement Figure S9. Figure 2 shows the clustered and stratified design
   effects in separate panels.
 * `01_ablation_expanded.R` and `03_gam_core.R` accept `ABL_DESIGNS` to rerun a
   subset of designs; `05_si_figures_data.R`, `06_s6_sdmtmb.R` and `07_s6_pooled.R`

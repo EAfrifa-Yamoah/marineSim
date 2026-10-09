@@ -44,7 +44,7 @@ analysis/               scripts that produce every number in the article, in ord
   02_decompose.R        Shapley tables T1 to T7 with cluster bootstrap
   02b_temporal_coverage.R  temporal value against nearest site distance (T8); clustered design random fill
   03_gam_core.R         spatial GAM on the Stage A datasets
-  04_core_benchmark_table.R  five method core benchmark (Figure 3, Table 2)
+  04_core_benchmark_table.R  five method core benchmark (Figure 2, Table 2)
   05_si_figures_data.R  worlds, tuning sensitivity, calibration (S2 to S5)
   06_s6_sdmtmb.R        sdmTMB comparator (S6)
   07_s6_pooled.R        stRF on pooled timesteps (S6)
@@ -52,13 +52,13 @@ analysis/               scripts that produce every number in the article, in ord
 results/                outputs of the scripts above, as reported
   ablation_expanded.csv       3,774 datasets x (GLM + 20 coalitions)
   expanded_T1..T8_*.csv       decomposition tables (T6 to T8 resolve the temporal block by n, design and coverage)
-  temporal_coverage_T5.csv    per dataset nearest site distance and Shapley values behind Figure 4c
+  temporal_coverage_T5.csv    per dataset nearest site distance and Shapley values behind Figure 3c
   clustered_legacy_random_fill.csv  random fill of the 3.0.x clustered generator, kept for the record
-  core_five_methods.csv       Figure 3 / Table 2 data
+  core_five_methods.csv       Figure 2 / Table 2 data
   si/                         gam_core, figS2..S4 data, tableS1/S5/S6
   case_study/                 cv_regimes, importance, corridor, hovmoller, rolling_origin, intervals, meta.json
 figures/
-  main/Figure2..8.png   article figures (Figure 1 is a schematic drawn outside R)
+  main/Figure1..7.png   article figures (the Supplement's Figure S1 is the schematic)
   si/FigureS1..S9.png   Supplement figures
   scripts/              ggplot2 scripts that draw the figures from results/ (figstyle.R holds the palette)
 data/
@@ -125,7 +125,7 @@ Then:
 Rscript 02_decompose.R            # tables T1 to T7            (minutes)
 Rscript 02b_temporal_coverage.R   # table T8, coverage per dataset (~5 min)
 Rscript 03_gam_core.R             # spatial GAM                 (~1 h)
-Rscript 04_core_benchmark_table.R # Figure 3 data, Table 2 columns
+Rscript 04_core_benchmark_table.R # Figure 2 data, Table 2 columns
 Rscript 05_si_figures_data.R      # S2 to S5 data              (~30 min)
 Rscript 07_s6_pooled.R            # S6 pooled stRF             (minutes)
 Rscript 06_s6_sdmtmb.R            # S6 sdmTMB (needs sdmTMB)   (~2 h)
@@ -144,9 +144,9 @@ Rscript 08_case_study.R           # ~5 min on one core
 
 ```bash
 cd ../figures/scripts
-Rscript make_figures_2_5.R; Rscript make_figure_3.R; Rscript make_figure_4.R
+Rscript make_figures_1_4.R; Rscript make_figure_2.R; Rscript make_figure_3.R
 Rscript make_figures_S2_S3_S4.R; Rscript make_figure_S8.R; Rscript make_figure_S1.R; Rscript make_figure_S9.R
-Rscript make_figures_case.R       # Figures 6 to 8 and S5 to S7
+Rscript make_figures_case.R       # Figures 5 to 7 and S5 to S7
 ```
 
 Each script reads only `results/` (and `data/coast_wa.json` for the maps) and

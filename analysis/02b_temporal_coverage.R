@@ -1,5 +1,5 @@
 # =============================================================================
-# 02b_temporal_coverage.R — temporal value against spatial coverage (Figure 4c)
+# 02b_temporal_coverage.R — temporal value against spatial coverage (Figure 3c)
 # =============================================================================
 # For every binary, full detection dataset at T = 5 in Stage A, rebuilds the
 # dataset (no model fitting) to measure how far the held out cells lie from their
