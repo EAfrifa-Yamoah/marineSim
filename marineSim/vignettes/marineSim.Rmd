@@ -32,7 +32,7 @@ to its components by an exact Shapley decomposition with a cluster bootstrap.
 This tutorial walks through that pipeline on a small scale. It is written so that
 every code chunk runs in a few seconds to a couple of minutes on one core, and so
 that each object can be inspected along the way. The full benchmark of the
-article (3,779 datasets) is driven by the scripts in the repository's
+article (3,774 datasets) is driven by the scripts in the repository's
 `analysis/` directory; Section 10 explains how the pieces shown here map onto
 those scripts and how a single archived result can be recomputed exactly.
 
@@ -164,10 +164,13 @@ sapply(grid, function(g) g$cfg)
 ## 4. Survey designs
 
 `sample_sites()` draws `n` distinct cells under one of three designs (Section
-3.2). Random sampling is simple random sampling of cells. Clustered sampling
-places three Gaussian clusters whose centres are uniform on the central 70
-percent of each axis. Stratified sampling partitions the grid into equal blocks
-and draws one cell in each of `n` blocks chosen without replacement.
+3.2). Random sampling is simple random sampling of cells. Clustered sampling is
+preferential sampling from three Gaussian clusters whose centres are uniform on
+the central 70 percent of each axis and whose spread is 6 percent of the grid
+side: every cell receives a weight equal to the mixture intensity at its centre,
+and `n` cells are drawn without replacement with probability proportional to
+that weight. Stratified sampling partitions the grid into equal blocks, chooses
+`n` blocks without replacement and draws one cell uniformly from each.
 
 ```{r designs, fig.width = 9, fig.height = 3.4}
 set.seed(3)
@@ -183,7 +186,36 @@ par(op)
 
 The clustered design is the data limited regime of most interest in the article:
 it leaves large parts of the domain unobserved, which is where spatial features
-built from the training sites can either help or extrapolate badly.
+built from the training sites can either help or extrapolate badly. Because the
+draw is weighted rather than rounded from continuous positions, the design stays
+clustered however large `n` becomes. The function below measures coverage as the
+median distance from a held out cell to its nearest site; under random sampling
+it shrinks towards one cell width at `n = 500`, under clustered sampling it does
+not.
+
+```{r coverage}
+coverage_km <- function(n, design) {
+  site <- sample_sites(n, design); test <- setdiff(seq_len(GRID^2), site)
+  median(apply(dist_km(cell_xy(test), cell_xy(site)), 1, min))
+}
+set.seed(4)
+sapply(c(30, 100, 500), function(n) c(n = n, random = coverage_km(n, "random"),
+                                        clustered = coverage_km(n, "clustered")))
+```
+
+Version 1.0.0 of the package drew clustered sites by rounding Gaussian offsets to
+cells, discarding duplicates and topping the sample up with uniformly random
+cells. The three cluster footprints hold only a few hundred of the 2,500 cells,
+so at large `n` that fill was substantial (about 25 percent of sites at
+`n = 200` and 45 percent at `n = 500`) and the "clustered" condition converged to
+random coverage. The old generators are kept as `"clustered_legacy"` and
+`"stratified_legacy"` so that the 1.0.0 archive can be reproduced, but they are
+not used by any reported result.
+
+```{r legacy}
+set.seed(5)
+c(legacy = coverage_km(500, "clustered_legacy"), current = coverage_km(500, "clustered"))
+```
 
 ## 5. From a world to a benchmark dataset
 
@@ -453,8 +485,10 @@ configurations. They illustrate the machinery rather than estimate the article's
 quantities, which rest on 36 fields, five sample sizes, three designs and four
 timestep spans. What should carry over, and is worth checking against your own
 run, is the structure: a placebo value near zero at `n_time = 1`, a spatial total
-that dominates the gain, and a smaller contribution of the clustered design's
-spatial lags, which have fewer neighbours to average.
+that dominates the gain, and a spatial lag contribution under the clustered
+design that is close to zero, because most held out cells have no site within
+the lag radii; in the article the location encodings and the temporal block
+carry the clustered design's gain.
 
 ## 9. Area of applicability
 
@@ -526,8 +560,14 @@ The runner is resumable and shardable because every dataset is identified by
 its key (response, detection, design, configuration, realisation, `n`, `n_time`,
 replicate) and seeded by `dataset_seed()` from that key. Completed keys are
 skipped on restart, and shards running on different cores produce identical
-rows. `02_decompose.R` then applies `add_shapley()` and `decomp_table()` to the
-merged table to produce the decomposition tables of the article.
+rows. Setting `ABL_DESIGNS` (for example `ABL_DESIGNS=clustered,stratified`)
+restricts a run to a subset of the designs, which is how the 2.0.0 rerun replaced
+the clustered and stratified rows while leaving the random rows untouched.
+`02_decompose.R` then applies `add_shapley()` and `decomp_table()` to the merged
+table to produce the decomposition tables of the article (T1 to T7), and
+`02b_temporal_coverage.R` rebuilds the `T = 5` datasets to relate the temporal
+Shapley value to the distance from held out cells to their nearest site (T8,
+Figure 4c of the article).
 
 ### 10.3 Recomputing one archived row
 
