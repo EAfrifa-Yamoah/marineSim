@@ -54,7 +54,7 @@ commit:
 
 ```bash
 git ls-files figures/ | wc -l     # expect 25 (16 png + 8 R scripts + figstyle.R)
-git ls-files results/ | wc -l     # expect 34
+git ls-files results/ | wc -l     # expect 35
 git ls-files data/                # expect data/coast_wa.json only
 ```
 
