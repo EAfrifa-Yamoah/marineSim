@@ -2,7 +2,9 @@
 
 Results change in this release: every clustered and stratified design number in
 the article is replaced. Version 1.0.0 (Zenodo 10.5281/zenodo.23103920) remains
-the record of the earlier generator.
+the record of the earlier generator. (The July revision's local tags v2.0.0 and
+v2.0.1, never pushed, are dropped so that this release can carry the number;
+that revision remains in the history before 1.0.0.)
 
 * `sample_sites()` now implements the clustered design as preferential sampling
   (cells drawn without replacement with probability proportional to a three
