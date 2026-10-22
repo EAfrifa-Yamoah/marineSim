@@ -19,13 +19,13 @@ verify:  ## engine mechanism checks (run first)
 benchmark:  ## expanded ablation grid, one core, resumable (~4-5 h)
 	cd $(A) && $(RS) 01_ablation_expanded.R
 
-decompose:  ## Shapley tables T1-T8 and the coverage analysis
-	cd $(A) && $(RS) 02_decompose.R && $(RS) 02b_temporal_coverage.R
+decompose:  ## Shapley tables T1-T10 and the coverage analysis
+	cd $(A) && $(RS) 02_decompose.R && $(RS) 02b_temporal_coverage.R && $(RS) 02c_decompose_by_n.R
 
 gam:  ## spatial GAM on Stage A datasets (~1 h)
 	cd $(A) && $(RS) 03_gam_core.R
 
-core:  ## five method core benchmark table (Figure 2, Table 2)
+core:  ## five method core benchmark table (Figure 4, Table 2)
 	cd $(A) && $(RS) 04_core_benchmark_table.R
 
 si:  ## S2-S5 data and S6 pooled stRF
@@ -41,7 +41,7 @@ $(DATA):
 	@echo "Missing $(DATA). Case study data are not redistributed; see README, Data availability."; exit 1
 
 figures:  ## draw all figures from results/ (ggplot2)
-	cd $(F) && $(RS) make_figures_1_4.R && $(RS) make_figure_2.R && $(RS) make_figure_3.R && $(RS) make_figures_S2_S3_S4.R \
+	cd $(F) && $(RS) make_figures_1_3.R && $(RS) make_figure_2.R && $(RS) make_figure_4.R && $(RS) make_figures_S2_S3_S4.R \
 	  && $(RS) make_figure_S8.R && $(RS) make_figure_S1.R && $(RS) make_figure_S9.R && $(RS) make_figures_case.R
 
 all: verify benchmark decompose gam core si figures  ## everything except sdmTMB and the case study

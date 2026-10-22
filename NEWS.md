@@ -1,3 +1,20 @@
+# marineSim 2.1.0 (2026-10-22)
+
+No simulation result changes. This release adds the decomposition along the
+sample size gradient and reorders the main text figures so that the data
+limited result leads.
+
+* New `analysis/02c_decompose_by_n.R` writes
+  `results/expanded_T9_decomposition_by_n.csv` (exact Shapley decomposition
+  within each per timestep sample size, pooled over designs; main text Table 3,
+  Figure 1a, Appendix S9 Table S16) and
+  `results/expanded_T10_decomposition_by_n_design.csv` (the same within each
+  design; Appendix S9 Table S17).
+* Main text figure order is now: Figure 1 decomposition (new panel (a) against
+  sample size), Figure 2 temporal block, Figure 3 robustness, Figure 4 method
+  comparison. Scripts renamed accordingly: `make_figures_1_3.R`,
+  `make_figure_2.R` (temporal), `make_figure_4.R` (methods).
+
 # marineSim 2.0.0 (2026-10-09)
 
 Results change in this release: every clustered and stratified design number in

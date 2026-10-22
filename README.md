@@ -42,9 +42,10 @@ analysis/               scripts that produce every number in the article, in ord
   00_verify_engine.R    PASS/FAIL mechanism checks (run first)
   01_ablation_expanded.R  GLM + 20 coalitions on the expanded grid (resumable, shardable)
   02_decompose.R        Shapley tables T1 to T7 with cluster bootstrap
+  02c_decompose_by_n.R  Shapley tables T9 and T10 along the sample size gradient
   02b_temporal_coverage.R  temporal value against nearest site distance (T8); clustered design random fill
   03_gam_core.R         spatial GAM on the Stage A datasets
-  04_core_benchmark_table.R  five method core benchmark (Figure 2, Table 2)
+  04_core_benchmark_table.R  five method core benchmark (Figure 4, Table 2)
   05_si_figures_data.R  worlds, tuning sensitivity, calibration (S2 to S5)
   06_s6_sdmtmb.R        sdmTMB comparator (S6)
   07_s6_pooled.R        stRF on pooled timesteps (S6)
@@ -54,7 +55,7 @@ results/                outputs of the scripts above, as reported
   expanded_T1..T8_*.csv       decomposition tables (T6 to T8 resolve the temporal block by n, design and coverage)
   temporal_coverage_T5.csv    per dataset nearest site distance and Shapley values behind Figure 3c
   clustered_legacy_random_fill.csv  random fill of the 3.0.x clustered generator, kept for the record
-  core_five_methods.csv       Figure 2 / Table 2 data
+  core_five_methods.csv       Figure 4 / Table 2 data
   si/                         gam_core, figS2..S4 data, tableS1/S5/S6
   case_study/                 cv_regimes, importance, corridor, hovmoller, rolling_origin, intervals, meta.json
 figures/
@@ -123,9 +124,10 @@ Then:
 
 ```bash
 Rscript 02_decompose.R            # tables T1 to T7            (minutes)
+Rscript 02c_decompose_by_n.R      # tables T9 and T10 by sample size (minutes)
 Rscript 02b_temporal_coverage.R   # table T8, coverage per dataset (~5 min)
 Rscript 03_gam_core.R             # spatial GAM                 (~1 h)
-Rscript 04_core_benchmark_table.R # Figure 2 data, Table 2 columns
+Rscript 04_core_benchmark_table.R # Figure 4 data, Table 2 columns
 Rscript 05_si_figures_data.R      # S2 to S5 data              (~30 min)
 Rscript 07_s6_pooled.R            # S6 pooled stRF             (minutes)
 Rscript 06_s6_sdmtmb.R            # S6 sdmTMB (needs sdmTMB)   (~2 h)
@@ -144,7 +146,7 @@ Rscript 08_case_study.R           # ~5 min on one core
 
 ```bash
 cd ../figures/scripts
-Rscript make_figures_1_4.R; Rscript make_figure_2.R; Rscript make_figure_3.R
+Rscript make_figures_1_3.R; Rscript make_figure_2.R; Rscript make_figure_4.R
 Rscript make_figures_S2_S3_S4.R; Rscript make_figure_S8.R; Rscript make_figure_S1.R; Rscript make_figure_S9.R
 Rscript make_figures_case.R       # Figures 5 to 7 and S5 to S7
 ```
@@ -161,7 +163,7 @@ files were produced by these scripts with ggplot2 3.4.4, patchwork 1.2.0 and rag
   archived `ablation_expanded.csv` rows exactly (21 score columns, maximum absolute
   difference 0); after the 4.0.0 design change the random design rows were rerun
   again and still match.
-* `02_decompose.R` and `04_core_benchmark_table.R` reproduce the archived tables
+* `02_decompose.R`, `02c_decompose_by_n.R` and `04_core_benchmark_table.R` reproduce the archived tables
   exactly from `ablation_expanded.csv`.
 * The case study rerun from `08_case_study.R` reproduces every archived CSV in `results/case_study/` exactly.
 * Twelve GAM fits rerun through `03_gam_core.R` match `si/gam_core.csv` to 1e-9.

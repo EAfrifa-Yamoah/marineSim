@@ -13,13 +13,13 @@ res <- function(...) file.path(RESULTS, ...)
 OI <- c(grey = "#999999", orange = "#E69F00", skyblue = "#56B4E9", green = "#009E73",
         yellow = "#F0E442", blue = "#0072B2", vermilion = "#D55E00", purple = "#CC79A7")
 
-# Methods (Figures 3, 6, S3, S4)
+# Methods (Figures 4, 5, S3, S4)
 METHOD_COL <- c("GLM" = OI[["grey"]], "GAM" = OI[["green"]], "Standard RF" = OI[["orange"]],
                 "Spatial RF" = OI[["skyblue"]], "stRF" = OI[["vermilion"]])
-# Feature blocks and the algorithmic term (Figures 2, 4, 5, S1, 6b/c)
+# Feature blocks and the algorithmic term (Figures 1, 2, 3, S1, 5b/c)
 COMP_COL <- c("Algorithmic" = OI[["grey"]], "Coordinates" = OI[["skyblue"]], "Distance fields" = OI[["blue"]],
               "Spatial lags" = OI[["green"]], "Temporal" = OI[["vermilion"]])
-# Marine parks (Figures 7, 8, S5)
+# Marine parks (Figures 6, 7, S5)
 REG   <- c("JBMP", "MMP", "CSMC", "SIMP", "NCMP")
 REG_L <- c(JBMP = "Jurien Bay", MMP = "Marmion", CSMC = "Cockburn Sound", SIMP = "Shoalwater", NCMP = "Ngari Capes")
 REG_COL <- c(JBMP = "#0072B2", MMP = "#E69F00", CSMC = "#009E73", SIMP = "#CC79A7", NCMP = "#5D3A9B")

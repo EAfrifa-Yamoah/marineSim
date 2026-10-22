@@ -1,4 +1,4 @@
-# Case study figures from results/case_study/: Figures 6, 7, 8 and S5, S6, S7
+# Case study figures from results/case_study/: Figures 5, 6, 7 and S5, S6, S7
 source(file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])), "figstyle.R"))
 suppressPackageStartupMessages(library(jsonlite))
 O <- function(f) res("case_study", f)
