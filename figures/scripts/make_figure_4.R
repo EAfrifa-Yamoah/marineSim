@@ -5,17 +5,21 @@ M <- c(GLM = "GLM", GAM = "GAM", RF = "Standard RF", SRF = "Spatial RF", STRF = 
 long <- do.call(rbind, lapply(names(M), function(k) data.frame(field = c0$field, design = c0$design, n = c0$n, method = M[[k]], auc = c0[[k]])))
 long$method <- factor(long$method, levels = M)
 
-# (a) pooled over designs: mean AUC and 2.5 to 97.5 percentile band of field realisation means
+# (a) pooled over designs: mean AUC (bars, drawn from the chance level 0.5) and 2.5 to 97.5 percentile interval of field realisation means
 fm <- aggregate(auc ~ field + n + method, long, mean)
 a <- do.call(rbind, lapply(split(fm, list(fm$n, fm$method)), function(s)
   data.frame(n = s$n[1], method = s$method[1], mean = mean(s$auc), lo = quantile(s$auc, 0.025), hi = quantile(s$auc, 0.975))))
-pa <- ggplot(a, aes(n, mean, colour = method, fill = method)) +
+a$n <- factor(a$n, levels = ns)
+pdb <- position_dodge(width = 0.82)
+pa <- ggplot(a, aes(n, mean, fill = method)) +
   theme(panel.grid.major.y = element_line(colour = "grey92", linewidth = 0.3)) +
-  geom_ribbon(aes(ymin = lo, ymax = hi), alpha = 0.15, colour = NA) +
+  geom_col(position = pdb, width = 0.8) +
+  geom_errorbar(aes(ymin = lo, ymax = hi), position = pdb, width = 0.3, linewidth = 0.35) +
   geom_hline(yintercept = 0.5, linetype = "13", linewidth = 0.4) +
-  geom_line(linewidth = 0.8) + geom_point(size = 1.9) +
-  scale_x_log10(breaks = ns) + scale_colour_manual(values = METHOD_COL) + scale_fill_manual(values = METHOD_COL) +
-  labs(x = "Sites per timestep", y = "Mean test AUC", colour = NULL, fill = NULL)
+  scale_fill_manual(values = METHOD_COL) +
+  scale_y_continuous(breaks = seq(0.5, 0.9, 0.1), expand = expansion(mult = c(0, 0.03))) +
+  coord_cartesian(ylim = c(0.5, 0.93)) +
+  labs(x = "Sites per timestep", y = "Mean test AUC", fill = NULL)
 
 # (b, c) change in mean AUC relative to random sampling, by method: clustered and stratified on their own scales
 dm <- aggregate(auc ~ design + n + method, long, mean)
@@ -32,6 +36,7 @@ diff_panel <- function(dsg, ylab) {
 }
 pb <- diff_panel("Clustered vs random", "Clustered minus random (\u0394AUC)") + scale_y_continuous(breaks = seq(-0.20, -0.05, 0.05))
 pc <- diff_panel("Stratified vs random", "Stratified minus random (\u0394AUC)")
-fig4 <- (pa + pb + pc) + plot_layout(widths = c(1.3, 1, 1), guides = "collect") +
+# layout: (a) across the top, (b) and (c) side by side below, one shared legend
+fig4 <- (pa / (pb + pc)) + plot_layout(heights = c(1.15, 1), guides = "collect") +
   plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
-save_png(fig4, "main/Figure4.png", 12.5, 4.4)
+save_png(fig4, "main/Figure4.png", 9, 7.6)
