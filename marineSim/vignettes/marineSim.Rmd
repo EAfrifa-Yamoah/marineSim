@@ -567,7 +567,7 @@ the clustered and stratified rows while leaving the random rows untouched.
 table to produce the decomposition tables of the article (T1 to T7), and
 `02b_temporal_coverage.R` rebuilds the `T = 5` datasets to relate the temporal
 Shapley value to the distance from held out cells to their nearest site (T8,
-Figure 3c of the article).
+Figure 2c of the article).
 
 ### 10.3 Recomputing one archived row
 
