@@ -10,6 +10,9 @@ limited result leads.
   Figure 1a, Appendix S9 Table S16) and
   `results/expanded_T10_decomposition_by_n_design.csv` (the same within each
   design; Appendix S9 Table S17).
+* Supplement figures S5 to S8 are renumbered in order of appearance: the
+  sdmTMB figure (Appendix S6) is now Figure S5 and the case study figures
+  (Appendix S7) are S6 to S8; `make_figure_S8.R` becomes `make_figure_S5.R`.
 * Main text figure order is now: Figure 1 decomposition (new panel (a) against
   sample size), Figure 2 temporal block, Figure 3 robustness, Figure 4 method
   comparison. Scripts renamed accordingly: `make_figures_1_3.R`,

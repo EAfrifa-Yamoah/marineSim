@@ -1,4 +1,4 @@
-# Figure S8: stRF versus sdmTMB from results/si/tableS6_full.csv
+# Figure S5: stRF versus sdmTMB from results/si/tableS6_full.csv
 source(file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])), "figstyle.R"))
 d <- read.csv(res("si", "tableS6_full.csv"))
 MOD <- c(stRF = "stRF", `stRF (pooled rows)` = "stRF_pooled", `sdmTMB spatial` = "sdmTMB_spatial",
@@ -14,6 +14,6 @@ pa <- ggplot(acc, aes(n, auc, colour = model)) + geom_line(linewidth = 0.7) + ge
   scale_x_log10(breaks = ns) + scale_colour_manual(values = MCOL, drop = FALSE) + labs(x = "Sites per timestep (n)", y = "Mean test AUC", colour = NULL)
 pb <- ggplot(tim, aes(n, t, colour = model)) + geom_line(linewidth = 0.7) + geom_point(size = 1.9) +
   scale_x_log10(breaks = ns) + scale_y_log10() + scale_colour_manual(values = MCOL, drop = FALSE) + labs(x = "Sites per timestep (n)", y = "Median fit time (s)", colour = NULL)
-figS8 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") &
+figS5 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") &
   theme(legend.position = "bottom") & guides(colour = guide_legend(nrow = 2))
-save_png(figS8, "si/FigureS8.png", 9.2, 4.3)
+save_png(figS5, "si/FigureS5.png", 9.2, 4.3)

@@ -42,6 +42,6 @@ $(DATA):
 
 figures:  ## draw all figures from results/ (ggplot2)
 	cd $(F) && $(RS) make_figures_1_3.R && $(RS) make_figure_2.R && $(RS) make_figure_4.R && $(RS) make_figures_S2_S3_S4.R \
-	  && $(RS) make_figure_S8.R && $(RS) make_figure_S1.R && $(RS) make_figure_S9.R && $(RS) make_figures_case.R
+	  && $(RS) make_figure_S5.R && $(RS) make_figure_S1.R && $(RS) make_figure_S9.R && $(RS) make_figures_case.R
 
 all: verify benchmark decompose gam core si figures  ## everything except sdmTMB and the case study

@@ -131,11 +131,11 @@ fig7 <- wrap_plots(A = pa8, B = depth_panel(), C = pb8, D = depth_panel(), E = p
   plot_annotation(tag_levels = list(c("(a)", "", "(b)", "", "(c)")))
 save_png(fig7, "main/Figure7.png", 9.4, 10.6)
 
-# ------------------------------------------------------------------ Figure S5: latitudinal transect
+# ------------------------------------------------------------------ Figure S6: latitudinal transect
 g2 <- grid[order(grid$latitude), ]; g2$bin <- cut(g2$latitude, 80)
 band <- aggregate(cbind(lat = latitude, pred, lo, hi, inside) ~ bin, g2, mean)
 out <- band[band$inside < 0.5, ]
-figS5 <- ggplot() +
+figS6 <- ggplot() +
   geom_rect(data = out, aes(xmin = lat - 0.022, xmax = lat + 0.022, ymin = -Inf, ymax = Inf, fill = "outside area of applicability")) +
   geom_ribbon(data = band, aes(lat, ymin = lo, ymax = hi, fill = "80% quantile forest band")) +
   geom_line(data = band, aes(lat, pred, linetype = "stRF prediction (corridor mean)"), colour = OI[["vermilion"]], linewidth = 0.8) +
@@ -148,9 +148,9 @@ figS5 <- ggplot() +
   scale_x_continuous(breaks = latbr, labels = sprintf("%.1f", abs(latbr))) +
   labs(x = "Latitude (°S)", y = "Shoot density 0.04 m²") +
   theme(legend.text = element_text(size = 7.5), legend.box = "vertical", legend.spacing.y = unit(0, "pt"))
-save_png(figS5, "si/FigureS5.png", 8.6, 4.6)
+save_png(figS6, "si/FigureS6.png", 8.6, 4.6)
 
-# ------------------------------------------------------------------ Figure S6: forecast skill
+# ------------------------------------------------------------------ Figure S7: forecast skill
 ro <- read.csv(O("rolling_origin.csv")); FC <- c(stRF = OI[["vermilion"]], persistence = OI[["blue"]], climatology = "#666666")
 lv <- aggregate(rho_level ~ horizon + method, ro, mean); lv$method <- factor(lv$method, levels = names(FC))
 an <- aggregate(rho_anomaly ~ horizon, ro[ro$method == "stRF", ], mean)
@@ -159,10 +159,10 @@ pa <- ggplot(lv, aes(horizon, rho_level, colour = method)) + geom_line(linewidth
 pb <- ggplot(an, aes(horizon, rho_anomaly)) + geom_hline(yintercept = 0, linetype = "22", colour = "grey60") +
   geom_line(colour = OI[["vermilion"]], linewidth = 0.8) + geom_point(colour = OI[["vermilion"]], size = 2) + ylim(-0.35, 0.35) +
   scale_x_continuous(breaks = unique(an$horizon)) + labs(x = "Forecast horizon (years ahead)", y = "Corr(predicted, observed) anomaly")
-figS6 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
-save_png(figS6, "si/FigureS6.png", 9, 4.2)
+figS7 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
+save_png(figS7, "si/FigureS7.png", 9, 4.2)
 
-# ------------------------------------------------------------------ Figure S7: interval coverage and width
+# ------------------------------------------------------------------ Figure S8: interval coverage and width
 iv <- read.csv(O("intervals.csv")); s <- aggregate(cbind(coverage, width) ~ regime + interval, iv, mean)
 IC <- c("ensemble spread" = OI[["grey"]], "QRF" = OI[["blue"]], "split conformal" = OI[["green"]])
 s$interval <- factor(s$interval, levels = names(IC))
@@ -172,5 +172,5 @@ pa <- ggplot(s, aes(regime, coverage, fill = interval)) + geom_col(position = po
   scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) + labs(x = NULL, y = "Empirical coverage of nominal 80% interval", fill = NULL, linetype = NULL)
 pb <- ggplot(s, aes(regime, width, fill = interval)) + geom_col(position = position_dodge(width = 0.8), width = 0.78) + scale_fill_manual(values = IC) +
   labs(x = NULL, y = "Mean interval width (shoots 0.04 m²)", fill = NULL)
-figS7 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
-save_png(figS7, "si/FigureS7.png", 9, 4.2)
+figS8 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
+save_png(figS8, "si/FigureS8.png", 9, 4.2)
