@@ -53,7 +53,7 @@ analysis/               scripts that produce every number in the article, in ord
 results/                outputs of the scripts above, as reported
   ablation_expanded.csv       3,774 datasets x (GLM + 20 coalitions)
   expanded_T1..T8_*.csv       decomposition tables (T6 to T8 resolve the temporal block by n, design and coverage)
-  temporal_coverage_T5.csv    per dataset nearest site distance and Shapley values behind Figure 3c
+  temporal_coverage_T5.csv    per dataset nearest site distance and Shapley values behind Figure 2c
   clustered_legacy_random_fill.csv  random fill of the 3.0.x clustered generator, kept for the record
   core_five_methods.csv       Figure 4 / Table 2 data
   si/                         gam_core, figS2..S4 data, tableS1/S5/S6
