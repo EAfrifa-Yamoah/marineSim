@@ -1,5 +1,5 @@
 # =============================================================================
-# 04_core_benchmark_table.R — the five method core benchmark (Figure 3, Table 2)
+# 04_core_benchmark_table.R — the five method core benchmark (Figure 4, Table 2)
 # =============================================================================
 # Extracts GLM, standard RF (v_BASE), spatial RF (v_COORD) and stRF
 # (v_COORD+EDF+LAG+TEMP) from Stage A of the ablation and merges the GAM scores.

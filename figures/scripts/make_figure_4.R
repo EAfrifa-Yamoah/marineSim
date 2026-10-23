@@ -1,43 +1,42 @@
-# Figure 4: the temporal block resolved by timesteps, sample size and design
-#   (a) temporal Shapley contribution against T, one line per sample size n (results/expanded_T6_temporal_by_T_n.csv)
-#   (b) share of the total gain carried by the temporal block against n, one line per T >= 3 (same file)
-#   (c) temporal Shapley against the median distance from a held out cell to its nearest site, by design, at T = 5
-#       (results/temporal_coverage_T5.csv for the datasets, results/expanded_T8_temporal_by_coverage.csv for the binned means)
+# Figure 4: the five method core benchmark from results/core_five_methods.csv
 source(file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])), "figstyle.R"))
-t6 <- read.csv(res("expanded_T6_temporal_by_T_n.csv"))
-cov <- read.csv(res("temporal_coverage_T5.csv")); t8 <- read.csv(res("expanded_T8_temporal_by_coverage.csv"))
-ns <- sort(unique(t6$n)); Ts <- c(3, 5, 10)
-RAMP <- c("30" = "#F2A66F", "50" = "#E8833F", "100" = "#D55E00", "200" = "#A84A00", "500" = "#6E3000")   # one hue, light to dark
-pdg <- position_dodge(width = 0.9)      # deterministic horizontal offsets so that intervals do not overlap
-pdl <- position_dodge(width = 0.16)     # the same on the log10 n axis
+c0 <- read.csv(res("core_five_methods.csv")); c0$field <- paste(c0$world_cfg, c0$realisation)
+M <- c(GLM = "GLM", GAM = "GAM", RF = "Standard RF", SRF = "Spatial RF", STRF = "stRF"); ns <- sort(unique(c0$n))
+long <- do.call(rbind, lapply(names(M), function(k) data.frame(field = c0$field, design = c0$design, n = c0$n, method = M[[k]], auc = c0[[k]])))
+long$method <- factor(long$method, levels = M)
 
-a <- t6[t6$quantity == "Shapley", ]; a$n <- factor(a$n, levels = ns)
-pa <- ggplot(a, aes(n_time, value, colour = n, group = n)) +
-  geom_hline(yintercept = 0, colour = "grey50", linewidth = 0.3) +
-  geom_errorbar(aes(ymin = ci_lo, ymax = ci_hi), width = 0.25, linewidth = 0.35, position = pdg) +
-  geom_line(linewidth = 0.7, position = pdg) + geom_point(size = 1.8, position = pdg) +
-  annotate("text", x = 1.6, y = 0.004, label = "placebo", size = 2.6, colour = "grey35", hjust = 0) +
-  scale_colour_manual(values = RAMP, name = "n =") + scale_x_continuous(breaks = c(1, 3, 5, 10)) +
-  labs(x = "Number of timesteps", y = "Temporal Shapley contribution (ΔAUC)") +
-  guides(colour = guide_legend(nrow = 1, title.position = "left", title.vjust = 0.5))
+# (a) pooled over designs: mean AUC (bars, drawn from the chance level 0.5) and 2.5 to 97.5 percentile interval of field realisation means
+fm <- aggregate(auc ~ field + n + method, long, mean)
+a <- do.call(rbind, lapply(split(fm, list(fm$n, fm$method)), function(s)
+  data.frame(n = s$n[1], method = s$method[1], mean = mean(s$auc), lo = quantile(s$auc, 0.025), hi = quantile(s$auc, 0.975))))
+a$n <- factor(a$n, levels = ns)
+pdb <- position_dodge(width = 0.82)
+pa <- ggplot(a, aes(n, mean, fill = method)) +
+  theme(panel.grid.major.y = element_line(colour = "grey92", linewidth = 0.3)) +
+  geom_col(position = pdb, width = 0.8) +
+  geom_errorbar(aes(ymin = lo, ymax = hi), position = pdb, width = 0.3, linewidth = 0.35) +
+  geom_hline(yintercept = 0.5, linetype = "13", linewidth = 0.4) +
+  scale_fill_manual(values = METHOD_COL) +
+  scale_y_continuous(breaks = seq(0.5, 0.9, 0.1), expand = expansion(mult = c(0, 0.03))) +
+  coord_cartesian(ylim = c(0.5, 0.93)) +
+  labs(x = "Sites per timestep", y = "Mean test AUC", fill = NULL)
 
-b <- t6[t6$quantity == "Share of total gain (%)", ]; b$n_time <- factor(b$n_time, levels = Ts, labels = paste0("T = ", Ts))
-pb <- ggplot(b, aes(n, value, linetype = n_time, shape = n_time)) +
-  geom_errorbar(aes(ymin = ci_lo, ymax = ci_hi), width = 0.04, linewidth = 0.35, colour = COMP_COL[["Temporal"]], linetype = "solid", position = pdl) +
-  geom_line(linewidth = 0.7, colour = COMP_COL[["Temporal"]], position = pdl) + geom_point(size = 1.9, colour = COMP_COL[["Temporal"]], position = pdl) +
-  scale_x_log10(breaks = ns) + scale_linetype_manual(values = c("solid", "22", "11")) + scale_shape_manual(values = c(16, 15, 17)) +
-  labs(x = "Sites per timestep", y = "Temporal share of total gain (%)", linetype = NULL, shape = NULL)
-
-DES <- c("random", "stratified", "clustered"); cov$design <- factor(cov$design, levels = DES); t8$design <- factor(t8$design, levels = DES)
-pc <- ggplot() +
-  geom_point(data = cov, aes(nn_median_km, phi_TEMP, shape = design), colour = COMP_COL[["Temporal"]], alpha = 0.16, size = 1) +
-  geom_errorbar(data = t8, aes(x_km, ymin = ci_lo, ymax = ci_hi, group = design), width = 0.03, linewidth = 0.35, colour = COMP_COL[["Temporal"]]) +
-  geom_line(data = t8, aes(x_km, value, linetype = design), colour = COMP_COL[["Temporal"]], linewidth = 0.7) +
-  geom_point(data = t8, aes(x_km, value, shape = design), colour = COMP_COL[["Temporal"]], size = 1.9) +
-  scale_x_log10(breaks = c(5, 10, 20, 40, 80, 160)) + scale_linetype_manual(values = c("11", "22", "solid")) + scale_shape_manual(values = c(17, 15, 16)) +
-  coord_cartesian(ylim = c(-0.01, 0.1)) +
-  labs(x = "Median nearest site distance (km)", y = "Temporal Shapley contribution (\u0394AUC)", linetype = NULL, shape = NULL)
-
-fig4 <- (pa + pb + pc) + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") &
-  theme(legend.position = "bottom", legend.title = element_text(size = 8), legend.text = element_text(size = 7.5))
-save_png(fig4, "main/Figure4.png", 11, 4.3)
+# (b, c) change in mean AUC relative to random sampling, by method: clustered and stratified on their own scales
+dm <- aggregate(auc ~ design + n + method, long, mean)
+b <- merge(dm[dm$design != "random", ], dm[dm$design == "random", c("n", "method", "auc")], by = c("n", "method"), suffixes = c("", "_random"))
+b$diff <- b$auc - b$auc_random
+b$design <- factor(b$design, levels = c("clustered", "stratified"), labels = c("Clustered vs random", "Stratified vs random"))
+pdl <- position_dodge(width = 0.12)      # horizontal offsets on the log10 axis so that points do not overlap
+diff_panel <- function(dsg, ylab) {
+  ggplot(b[b$design == dsg, ], aes(n, diff, colour = method)) +
+    geom_line(linewidth = 0.7, position = pdl) + geom_point(size = 1.9, position = pdl) +
+    scale_x_log10(breaks = ns) + scale_colour_manual(values = METHOD_COL, guide = "none") +
+    labs(x = "Sites per timestep", y = ylab) +
+    theme(panel.grid.major.y = element_line(colour = "grey92", linewidth = 0.3))
+}
+pb <- diff_panel("Clustered vs random", "Clustered minus random (\u0394AUC)") + scale_y_continuous(breaks = seq(-0.20, -0.05, 0.05))
+pc <- diff_panel("Stratified vs random", "Stratified minus random (\u0394AUC)")
+# layout: (a) across the top, (b) and (c) side by side below, one shared legend
+fig4 <- (pa / (pb + pc)) + plot_layout(heights = c(1.15, 1), guides = "collect") +
+  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
+save_png(fig4, "main/Figure4.png", 9, 7.6)

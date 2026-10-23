@@ -54,5 +54,5 @@
     }
   ],
   "notes": "On acceptance, add the article DOI as a related identifier with relation 'isSupplementTo' and scheme 'doi'.",
-  "version": "2.0.0"
+  "version": "2.1.0"
 }

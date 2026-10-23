@@ -1,4 +1,4 @@
-# Case study figures from results/case_study/: Figures 6, 7, 8 and S5, S6, S7
+# Case study figures from results/case_study/: Figures 5, 6, 7 and S5, S6, S7
 source(file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])), "figstyle.R"))
 suppressPackageStartupMessages(library(jsonlite))
 O <- function(f) res("case_study", f)
@@ -8,7 +8,7 @@ coast <- fromJSON(Sys.getenv("CASE_COAST", res("..", "data", "coast_wa.json")), 
 MKEY <- c(GLM = "GLM", GAM = "GAM", RF = "Standard RF", SpatialRF = "Spatial RF", stRF = "stRF")
 FEAT_COL <- c("spatial feature (b, c)" = OI[["blue"]], "temporal (b, c)" = OI[["vermilion"]], "environmental (b, c)" = OI[["grey"]])
 
-# ------------------------------------------------------------------ Figure 6
+# ------------------------------------------------------------------ Figure 5
 regimes <- c("random 10-fold" = "random\n10-fold", "site-grouped" = "site\ngrouped", "LORO" = "leave one\nregion out")
 cva <- cv[cv$regime %in% names(regimes) & cv$method %in% names(MKEY), ]
 cva$value <- ifelse(cva$regime == "LORO" & !is.na(cva$Spearman_within_park), cva$Spearman_within_park, cva$Spearman_pooled)
@@ -35,11 +35,11 @@ d2$label <- factor(lab[d2$removed], levels = rev(lab[d2$removed]))
 pc <- ggplot(d2, aes(loss, label, fill = kind)) + geom_vline(xintercept = 0, colour = "grey50", linewidth = 0.3) + geom_col(width = 0.75) +
   scale_fill_manual(values = FEAT_COL) + labs(x = "Loss in CV rank correlation when removed", y = NULL, fill = NULL) +
   theme(axis.text.y = element_text(size = 7.5))
-fig6 <- (pa + pb + pc) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") &
+fig5 <- (pa + pb + pc) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") &
   theme(legend.position = "bottom", legend.text = element_text(size = 7.5))
-save_png(fig6, "main/Figure6.png", 11, 4.2)
+save_png(fig5, "main/Figure5.png", 11, 4.2)
 
-# ------------------------------------------------------------------ Figure 7
+# ------------------------------------------------------------------ Figure 6
 coast_df <- do.call(rbind, lapply(seq_along(coast), function(i) { P <- do.call(rbind, lapply(coast[[i]], unlist))
   if (nrow(P) < 3) return(NULL); data.frame(id = i, lon = P[, 1], lat = P[, 2]) }))
 lon0 <- 114.75; lon1 <- 116.05; lat0 <- min(agg$latitude) - 0.12; lat1 <- max(agg$latitude) + 0.12
@@ -98,10 +98,10 @@ p7c <- ggplot() + base_map() +
   guides(colour = guide_legend(override.aes = list(size = 3))) +
   theme(legend.position = c(0.97, 0.97), legend.justification = c(1, 1), legend.text = element_text(size = 6), legend.background = element_rect(fill = alpha("white", 0.92), colour = NA),
         legend.key.size = unit(8, "pt"), axis.title.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank())
-fig7 <- (p7a + p7b + p7c) + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
-save_png(fig7, "main/Figure7.png", 7.6, 7.4)
+fig6 <- (p7a + p7b + p7c) + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
+save_png(fig6, "main/Figure6.png", 7.6, 7.4)
 
-# ------------------------------------------------------------------ Figure 8
+# ------------------------------------------------------------------ Figure 7
 hv <- read.csv(O("hovmoller.csv")); traj <- read.csv(O("traj.csv")); dp <- read.csv(O("depth_profile.csv")); meta <- fromJSON(O("meta.json"))
 years <- sort(unique(hv$year)); thr <- meta$temporal_DI_thresh; xt <- seq(min(years), max(years), 3); vmax <- quantile(agg$dens, 0.98, na.rm = TRUE)
 lat_rng <- range(hv$lat); traj$region <- factor(traj$region, levels = REG); agg$region <- factor(agg$region, levels = REG)
@@ -127,15 +127,15 @@ pc8 <- ggplot() + geom_raster(data = hv, aes(year, lat, fill = DI), interpolate 
   scale_x_continuous(breaks = xt, expand = c(0, 0)) + right_lat() + labs(x = "Year", y = NULL) +
   theme(legend.position = "right", legend.title = element_text(size = 8), legend.text = element_text(size = 7), axis.text = element_text(size = 7))
 design8 <- "AAAA\nBCCC\nDEEE"
-fig8 <- wrap_plots(A = pa8, B = depth_panel(), C = pb8, D = depth_panel(), E = pc8, design = design8, heights = c(0.62, 1, 1)) +
+fig7 <- wrap_plots(A = pa8, B = depth_panel(), C = pb8, D = depth_panel(), E = pc8, design = design8, heights = c(0.62, 1, 1)) +
   plot_annotation(tag_levels = list(c("(a)", "", "(b)", "", "(c)")))
-save_png(fig8, "main/Figure8.png", 9.4, 10.6)
+save_png(fig7, "main/Figure7.png", 9.4, 10.6)
 
-# ------------------------------------------------------------------ Figure S5: latitudinal transect
+# ------------------------------------------------------------------ Figure S6: latitudinal transect
 g2 <- grid[order(grid$latitude), ]; g2$bin <- cut(g2$latitude, 80)
 band <- aggregate(cbind(lat = latitude, pred, lo, hi, inside) ~ bin, g2, mean)
 out <- band[band$inside < 0.5, ]
-figS5 <- ggplot() +
+figS6 <- ggplot() +
   geom_rect(data = out, aes(xmin = lat - 0.022, xmax = lat + 0.022, ymin = -Inf, ymax = Inf, fill = "outside area of applicability")) +
   geom_ribbon(data = band, aes(lat, ymin = lo, ymax = hi, fill = "80% quantile forest band")) +
   geom_line(data = band, aes(lat, pred, linetype = "stRF prediction (corridor mean)"), colour = OI[["vermilion"]], linewidth = 0.8) +
@@ -148,9 +148,9 @@ figS5 <- ggplot() +
   scale_x_continuous(breaks = latbr, labels = sprintf("%.1f", abs(latbr))) +
   labs(x = "Latitude (°S)", y = "Shoot density 0.04 m²") +
   theme(legend.text = element_text(size = 7.5), legend.box = "vertical", legend.spacing.y = unit(0, "pt"))
-save_png(figS5, "si/FigureS5.png", 8.6, 4.6)
+save_png(figS6, "si/FigureS6.png", 8.6, 4.6)
 
-# ------------------------------------------------------------------ Figure S6: forecast skill
+# ------------------------------------------------------------------ Figure S7: forecast skill
 ro <- read.csv(O("rolling_origin.csv")); FC <- c(stRF = OI[["vermilion"]], persistence = OI[["blue"]], climatology = "#666666")
 lv <- aggregate(rho_level ~ horizon + method, ro, mean); lv$method <- factor(lv$method, levels = names(FC))
 an <- aggregate(rho_anomaly ~ horizon, ro[ro$method == "stRF", ], mean)
@@ -159,10 +159,10 @@ pa <- ggplot(lv, aes(horizon, rho_level, colour = method)) + geom_line(linewidth
 pb <- ggplot(an, aes(horizon, rho_anomaly)) + geom_hline(yintercept = 0, linetype = "22", colour = "grey60") +
   geom_line(colour = OI[["vermilion"]], linewidth = 0.8) + geom_point(colour = OI[["vermilion"]], size = 2) + ylim(-0.35, 0.35) +
   scale_x_continuous(breaks = unique(an$horizon)) + labs(x = "Forecast horizon (years ahead)", y = "Corr(predicted, observed) anomaly")
-figS6 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
-save_png(figS6, "si/FigureS6.png", 9, 4.2)
+figS7 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
+save_png(figS7, "si/FigureS7.png", 9, 4.2)
 
-# ------------------------------------------------------------------ Figure S7: interval coverage and width
+# ------------------------------------------------------------------ Figure S8: interval coverage and width
 iv <- read.csv(O("intervals.csv")); s <- aggregate(cbind(coverage, width) ~ regime + interval, iv, mean)
 IC <- c("ensemble spread" = OI[["grey"]], "QRF" = OI[["blue"]], "split conformal" = OI[["green"]])
 s$interval <- factor(s$interval, levels = names(IC))
@@ -172,5 +172,5 @@ pa <- ggplot(s, aes(regime, coverage, fill = interval)) + geom_col(position = po
   scale_y_continuous(limits = c(0, 1), expand = c(0, 0)) + labs(x = NULL, y = "Empirical coverage of nominal 80% interval", fill = NULL, linetype = NULL)
 pb <- ggplot(s, aes(regime, width, fill = interval)) + geom_col(position = position_dodge(width = 0.8), width = 0.78) + scale_fill_manual(values = IC) +
   labs(x = NULL, y = "Mean interval width (shoots 0.04 m²)", fill = NULL)
-figS7 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
-save_png(figS7, "si/FigureS7.png", 9, 4.2)
+figS8 <- (pa + pb) + plot_layout(guides = "collect") + plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") & theme(legend.position = "bottom")
+save_png(figS8, "si/FigureS8.png", 9, 4.2)
