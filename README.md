@@ -148,7 +148,7 @@ Rscript 08_case_study.R           # ~5 min on one core
 cd ../figures/scripts
 Rscript make_figures_1_3.R; Rscript make_figure_2.R; Rscript make_figure_4.R
 Rscript make_figures_S2_S3_S4.R; Rscript make_figure_S5.R; Rscript make_figure_S1.R; Rscript make_figure_S9.R
-Rscript make_figures_case.R       # Figures 5 to 7 and S5 to S7
+Rscript make_figures_case.R       # Figures 5 to 7 and S6 to S8
 ```
 
 Each script reads only `results/` (and `data/coast_wa.json` for the maps) and

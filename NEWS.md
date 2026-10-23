@@ -17,6 +17,8 @@ limited result leads.
   sample size), Figure 2 temporal block, Figure 3 robustness, Figure 4 method
   comparison. Scripts renamed accordingly: `make_figures_1_3.R`,
   `make_figure_2.R` (temporal), `make_figure_4.R` (methods).
+* Figure 4 shows the clustered and stratified design effects in separate
+  panels, (b) and (c).
 
 # marineSim 2.0.0 (2026-10-09)
 
@@ -40,10 +42,9 @@ that revision remains in the history before 1.0.0.)
   the 1.0.0 archive exactly. `results/` and all affected figures and tables are
   updated. Six clustered draws with a degenerate training response were
   discarded (3,774 datasets, 79,254 fits).
-* Figure 3 now resolves the temporal block by span, sample size and spatial
+* Figure 4 now resolves the temporal block by span, sample size and spatial
   coverage (tables T6 to T8, `02b_temporal_coverage.R`); the former pooled figure
-  is Supplement Figure S9. Figure 2 shows the clustered and stratified design
-  effects in separate panels.
+  is Supplement Figure S9.
 * `01_ablation_expanded.R` and `03_gam_core.R` accept `ABL_DESIGNS` to rerun a
   subset of designs; `05_si_figures_data.R`, `06_s6_sdmtmb.R` and `07_s6_pooled.R`
   attach ranger explicitly. The vignette is updated for the corrected designs.
